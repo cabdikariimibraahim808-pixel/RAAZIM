@@ -20,6 +20,7 @@
 </header>
 
 <main id="top">
+  <!-- Hero Section -->
   <section class="hero">
     <div class="hero-content">
       <h1>Travel Premium Across Somaliland</h1>
@@ -32,6 +33,7 @@
     <div class="hero-image"></div>
   </section>
 
+  <!-- Routes Section -->
   <section id="routes" class="section">
     <h2>Our Routes</h2>
     <div class="cards">
@@ -62,6 +64,7 @@
     </div>
   </section>
 
+  <!-- Services Section -->
   <section id="services" class="section">
     <h2>Our Services</h2>
     <div class="cards services">
@@ -85,5 +88,27 @@
   <p>📞 <a href="https://wa.me/252637762739" target="_blank" rel="noopener">+252 63 776 2739</a></p>
   <p>© 2025 RAAZIM Bus — All Rights Reserved</p>
 </footer>
+
+<!-- Chatbot HTML -->
+<div id="chatbot">
+    <div id="chatbot-header">Chat with RAAZIM Bot</div>
+    <div id="chatbot-messages"></div>
+    <div id="chatbot-input">
+        <input type="text" id="user-input" placeholder="Type your message...">
+        <button id="send-btn">Send</button>
+    </div>
+</div>
+
+<script src="index.js"></script>
+
+<script>
+  // Chatbot Toggle
+  const chatbot = document.getElementById('chatbot');
+  const chatbotHeader = document.getElementById('chatbot-header');
+
+  chatbotHeader.addEventListener('click', () => {
+      chatbot.classList.toggle('minimized');
+  });
+</script>
 </body>
 </html>
