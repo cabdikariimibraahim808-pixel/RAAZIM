@@ -1,67 +1,69 @@
-// Modal elements
 const aiModal = document.getElementById("ai-modal");
 const openAiBtn = document.getElementById("open-ai-btn");
 const closeAiBtn = document.getElementById("close-ai-btn");
-const aiChat = document.getElementById("ai-chat");
 const aiInput = document.getElementById("ai-input");
 const aiSend = document.getElementById("ai-send");
+const aiChat = document.getElementById("ai-chat");
 
-// Responses for the AI
+// Hardcoded responses
 const responses = [
-  { keywords: ["owner", "who owns", "raazim owner"], reply: "The owner is Cabdikariim Mohamoud." },
-  { keywords: ["bus", "raazim"], reply: "RAAZIM Bus operates between Borama, Hargeisa, and Burco." },
-  { keywords: ["wifi"], reply: "Yes, we provide free WiFi on all trips." },
-  { keywords: ["routes"], reply: "You can see our routes under the Routes section." },
+  { keywords: ["owner", "who owns"], reply: "The owner is Cabdikariim Mohamoud." },
+  { keywords: ["raazim", "bus"], reply: "RAAZIM Bus connects Borama, Hargeisa, and Burco." },
+  { keywords: ["wifi"], reply: "We offer free WiFi on all buses." },
+  { keywords: ["book", "ticket"], reply: "You can book via WhatsApp using the Book Now button." },
+  { keywords: ["hi", "hello"], reply: "Hello! How can I assist you today?" },
+  { keywords: ["bye"], reply: "Goodbye! Safe travels!" }
 ];
 
-// OPEN AI MODAL
-if (openAiBtn) {
-  openAiBtn.addEventListener("click", () => {
-    aiModal.classList.remove("hidden");
-    aiInput.focus();
-  });
-}
+// Show modal
+openAiBtn.addEventListener("click", () => { aiModal.classList.remove("hidden"); aiInput.focus(); });
 
-// CLOSE AI MODAL
-if (closeAiBtn) {
-  closeAiBtn.addEventListener("click", () => {
-    aiModal.classList.add("hidden");
-  });
-}
+// Close modal
+closeAiBtn.addEventListener("click", () => { aiModal.classList.add("hidden"); });
 
-// SEND MESSAGE
-aiSend.addEventListener("click", () => sendMessage());
-aiInput.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") sendMessage();
-});
-
+// Send message
 function sendMessage() {
   const message = aiInput.value.trim();
-  if (!message) return;
+  if(!message) return;
+  appendMessage(message, 'user');
+  aiInput.value = '';
 
-  appendMessage(message, "user-message");
-  aiInput.value = "";
-
-  setTimeout(() => {
+  setTimeout(()=> {
     const reply = getReply(message);
-    appendMessage(reply, "ai-message");
+    appendMessage(reply, 'ai');
   }, 800);
 }
 
-function appendMessage(text, className) {
+aiSend.addEventListener("click", sendMessage);
+aiInput.addEventListener("keypress", (e)=> { if(e.key==="Enter") sendMessage(); });
+
+function appendMessage(text, sender){
   const div = document.createElement("div");
-  div.classList.add(className);
   div.textContent = text;
+  div.classList.add(sender==="user"?"user-msg":"ai-msg");
+  div.style.margin="10px 0";
+  div.style.padding="10px";
+  div.style.borderRadius="8px";
+  div.style.maxWidth="80%";
+  if(sender==="user"){
+    div.style.background="#00d4ff";
+    div.style.color="#000";
+    div.style.alignSelf="flex-end";
+  } else {
+    div.style.background="#004080";
+    div.style.color="#fff";
+    div.style.alignSelf="flex-start";
+  }
   aiChat.appendChild(div);
   aiChat.scrollTop = aiChat.scrollHeight;
 }
 
-function getReply(message) {
+function getReply(message){
   message = message.toLowerCase();
-  for (let res of responses) {
-    for (let key of res.keywords) {
-      if (message.includes(key)) return res.reply;
+  for(let r of responses){
+    for(let key of r.keywords){
+      if(message.includes(key)) return r.reply;
     }
   }
-  return "I’m sorry, I don’t have that information right now.";
+  return "Sorry, I don't have an answer for that yet.";
 }
