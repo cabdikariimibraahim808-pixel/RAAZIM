@@ -1,3 +1,4 @@
+// Modal elements
 const aiModal = document.getElementById("ai-modal");
 const openAiBtn = document.getElementById("open-ai-btn");
 const closeAiBtn = document.getElementById("close-ai-btn");
@@ -13,22 +14,23 @@ const responses = [
   { keywords: ["routes"], reply: "You can see our routes under the Routes section." },
 ];
 
-// Open AI Modal
-openAiBtn.addEventListener("click", () => {
-  aiModal.classList.remove("hidden");
-  aiInput.focus();
-});
+// OPEN AI MODAL
+if (openAiBtn) {
+  openAiBtn.addEventListener("click", () => {
+    aiModal.classList.remove("hidden");
+    aiInput.focus();
+  });
+}
 
-// Close AI Modal
-closeAiBtn.addEventListener("click", () => {
-  aiModal.classList.add("hidden");
-});
+// CLOSE AI MODAL
+if (closeAiBtn) {
+  closeAiBtn.addEventListener("click", () => {
+    aiModal.classList.add("hidden");
+  });
+}
 
-// Send message
-aiSend.addEventListener("click", () => {
-  sendMessage();
-});
-
+// SEND MESSAGE
+aiSend.addEventListener("click", () => sendMessage());
 aiInput.addEventListener("keypress", (e) => {
   if (e.key === "Enter") sendMessage();
 });
