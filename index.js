@@ -1,47 +1,53 @@
-// Get chatbot elements
-const chatbotHeader = document.getElementById('chatbot-header');
-const chatbotMessages = document.getElementById('chatbot-messages');
-const userInput = document.getElementById('user-input');
-const sendBtn = document.getElementById('send-btn');
+const messages = document.getElementById("chatbot-messages");
+const input = document.getElementById("chatbot-input");
+const sendBtn = document.getElementById("chatbot-send");
+const newBtn = document.getElementById("chatbot-new");
 
-// Toggle chatbot open/close
-chatbotHeader.addEventListener('click', () => {
-    const chatbot = document.getElementById('chatbot');
-    chatbot.style.height = chatbot.style.height === '50px' ? '400px' : '50px';
-    chatbotMessages.style.display = chatbotMessages.style.display === 'none' ? 'block' : 'none';
-    document.getElementById('chatbot-input').style.display = document.getElementById('chatbot-input').style.display === 'none' ? 'flex' : 'none';
-});
+let chatHistory = JSON.parse(localStorage.getItem("raazimChat")) || [];
 
-// Send message events
-sendBtn.addEventListener('click', handleInput);
-userInput.addEventListener('keypress', e => { 
-    if (e.key === 'Enter') handleInput(); 
-});
-
-// Function to scroll to a section
-function scrollToSection(id) {
-    const section = document.getElementById(id);
-    if(section){
-        section.scrollIntoView({ behavior: 'smooth' });
-    }
+function saveChat() {
+    localStorage.setItem("raazimChat", JSON.stringify(chatHistory));
 }
 
-// Handle user input
-function handleInput() {
-    const msg = userInput.value.trim().toLowerCase();
-    if (!msg) return;
-
-    if (msg.includes('routes') || msg.includes('route') || msg.includes('borama') || msg.includes('hargeisa') || msg.includes('burco')) {
-        scrollToSection('routes');
-    } else if (msg.includes('services') || msg.includes('wifi')) {
-        scrollToSection('services');
-    } else if (msg.includes('book') || msg.includes('ticket') || msg.includes('seat')) {
-        window.open('https://wa.me/252637762739', '_blank');
-    } else {
-        // Default: suggest main actions
-        alert('Try typing "routes", "services", or "book ticket" to navigate.');
-    }
-
-    // Clear input
-    userInput.value = '';
+function renderMessages() {
+    messages.innerHTML = "";
+    chatHistory.forEach(msg => {
+        const div = document.createElement("div");
+        div.classList.add("chatbot-msg", msg.sender === "user" ? "user-msg" : "ai-msg");
+        div.textContent = msg.text;
+        messages.appendChild(div);
+    });
+    messages.scrollTop = messages.scrollHeight;
 }
+
+function botResponse(text) {
+    text = text.toLowerCase();
+    if (text.includes("owner")) return "The owner is Cabdikariim Mohamoud.";
+    if (text.includes("routes")) return "Check our routes section above! ⬆️";
+    if (text.includes("services")) return "Visit our services section for details.";
+    if (text.includes("book")) return "You can book via WhatsApp using the buttons above.";
+    return "I'm here to help with anything about RAAZIM Bus!";
+}
+
+sendBtn.addEventListener("click", () => {
+    const txt = input.value.trim();
+    if (!txt) return;
+    chatHistory.push({ sender: "user", text: txt });
+    const reply = botResponse(txt);
+    chatHistory.push({ sender: "ai", text: reply });
+    renderMessages();
+    saveChat();
+    input.value = "";
+});
+
+input.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") sendBtn.click();
+});
+
+newBtn.addEventListener("click", () => {
+    chatHistory = [];
+    saveChat();
+    renderMessages();
+});
+
+renderMessages();
