@@ -1,10 +1,12 @@
-const aiBtn = document.getElementById("ai-btn");
-const chatbotContainer = document.getElementById("chatbot-container");
+// Footer AI button
+const aiBtn = document.getElementById("ai-btn-footer");
+const chatbot = document.getElementById("chatbot-container");
 const backBtn = document.getElementById("chatbot-back");
-const messages = document.getElementById("chatbot-messages");
-const input = document.getElementById("chatbot-input");
+const chatMessages = document.getElementById("chatbot-messages");
+const chatInput = document.getElementById("chatbot-input");
 const sendBtn = document.getElementById("chatbot-send");
 
+// Chat history
 let chatHistory = JSON.parse(localStorage.getItem("raazimChat")) || [];
 
 function saveChat() {
@@ -12,14 +14,14 @@ function saveChat() {
 }
 
 function renderMessages() {
-    messages.innerHTML = "";
+    chatMessages.innerHTML = "";
     chatHistory.forEach(msg => {
         const div = document.createElement("div");
         div.classList.add("chatbot-msg", msg.sender === "user" ? "user-msg" : "ai-msg");
         div.textContent = msg.text;
-        messages.appendChild(div);
+        chatMessages.appendChild(div);
     });
-    messages.scrollTop = messages.scrollHeight;
+    chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
 function botResponse(text) {
@@ -31,31 +33,22 @@ function botResponse(text) {
     return "I'm here to help with anything about RAAZIM Bus!";
 }
 
-// Open chatbot
-aiBtn.addEventListener("click", () => {
-    chatbotContainer.style.display = "flex";
-});
-
-// Close chatbot
-backBtn.addEventListener("click", () => {
-    chatbotContainer.style.display = "none";
-});
+// Open/Close chatbot
+aiBtn.addEventListener("click", () => { chatbot.style.display = "flex"; });
+backBtn.addEventListener("click", () => { chatbot.style.display = "none"; });
 
 // Send message
 sendBtn.addEventListener("click", () => {
-    const txt = input.value.trim();
-    if (!txt) return;
-    chatHistory.push({ sender: "user", text: txt });
-    const reply = botResponse(txt);
-    chatHistory.push({ sender: "ai", text: reply });
+    const text = chatInput.value.trim();
+    if(!text) return;
+    chatHistory.push({ sender:"user", text });
+    chatHistory.push({ sender:"ai", text:botResponse(text) });
     renderMessages();
     saveChat();
-    input.value = "";
+    chatInput.value = "";
 });
 
-input.addEventListener("keypress", (e) => {
-    if (e.key === "Enter") sendBtn.click();
-});
+chatInput.addEventListener("keypress",(e)=>{if(e.key==="Enter")sendBtn.click();});
 
-// Render chat on load
+// Render on load
 renderMessages();
