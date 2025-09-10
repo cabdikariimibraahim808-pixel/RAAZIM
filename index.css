@@ -68,4 +68,29 @@ body {
 
 .ai-header {
   display: flex; justify-content: space-between; align-items: center;
-  padding: 15
+  padding: 15px; background: #007acc; color: #fff;
+}
+
+.ai-chat {
+  flex: 1; padding: 20px; overflow-y: auto; color: #fff;
+}
+
+.ai-welcome { text-align: center; margin-top: 50px; font-size: 20px; }
+
+.ai-footer {
+  display: flex; padding: 12px; background: #007acc;
+}
+.ai-footer input {
+  flex: 1; padding: 10px; border-radius: 6px; border: none;
+}
+.ai-footer button {
+  padding: 10px 15px; margin-left: 10px; border-radius: 6px;
+  border: none; background: #00d4ff; cursor: pointer;
+}
+
+/* Mobile friendly */
+@media(max-width:768px){
+  .hero-content h1{font-size:32px;}
+  .section h2{font-size:28px;}
+  .card{width:90%;}
+}
