@@ -70,15 +70,20 @@
         <h3>Free WiFi</h3>
         <p>Stay connected with onboard WiFi on every trip.</p>
       </div>
-
-      <!-- New AI Assistant Section -->
-      <div class="card">
-        <img src="https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&fit=crop&w=1200&q=80" alt="AI Assistant">
-        <h3>AI Assistant</h3>
-        <p>Get travel info, routes, and help instantly with our virtual assistant.</p>
-        <button class="cta-btn" id="open-ai-btn">Open AI Assistant</button>
-      </div>
     </div>
+    <div class="center">
+      <a class="cta-btn" target="_blank" rel="noopener"
+         href="https://wa.me/252637762739?text=Hello%20RAAZIM%20Bus%2C%20I%20would%20like%20to%20know%20more%20about%20your%20services.">
+         Ask About Services
+      </a>
+    </div>
+  </section>
+
+  <!-- AI Assistant Section -->
+  <section id="ai-assistant" class="section">
+    <h2>AI Assistant</h2>
+    <p>Ask questions about RAAZIM Bus or general info.</p>
+    <button id="open-ai-btn" class="cta-btn">Open AI Assistant</button>
   </section>
 </main>
 
@@ -87,7 +92,22 @@
   <p>📞 <a href="https://wa.me/252637762739" target="_blank" rel="noopener">+252 63 776 2739</a></p>
   <p>© 2025 RAAZIM Bus — All Rights Reserved</p>
 </footer>
- 
+
+<!-- AI Modal -->
+<div id="ai-modal" class="ai-modal hidden">
+  <div class="ai-header">
+    <h3>AI Assistant</h3>
+    <button id="close-ai-btn">&times;</button>
+  </div>
+  <div id="ai-chat" class="ai-chat">
+    <div class="ai-welcome">Hello! I am Karim AI. Ask me anything about RAAZIM Bus.</div>
+  </div>
+  <div class="ai-footer">
+    <input type="text" id="ai-input" placeholder="Type your question...">
+    <button id="ai-send">Send</button>
+  </div>
+</div>
+
 <script src="index.js"></script>
 </body>
 </html>
