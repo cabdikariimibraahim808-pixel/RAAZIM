@@ -1,7 +1,9 @@
+const aiBtn = document.getElementById("ai-btn");
+const chatbotContainer = document.getElementById("chatbot-container");
+const backBtn = document.getElementById("chatbot-back");
 const messages = document.getElementById("chatbot-messages");
 const input = document.getElementById("chatbot-input");
 const sendBtn = document.getElementById("chatbot-send");
-const newBtn = document.getElementById("chatbot-new");
 
 let chatHistory = JSON.parse(localStorage.getItem("raazimChat")) || [];
 
@@ -29,6 +31,17 @@ function botResponse(text) {
     return "I'm here to help with anything about RAAZIM Bus!";
 }
 
+// Open chatbot
+aiBtn.addEventListener("click", () => {
+    chatbotContainer.style.display = "flex";
+});
+
+// Close chatbot
+backBtn.addEventListener("click", () => {
+    chatbotContainer.style.display = "none";
+});
+
+// Send message
 sendBtn.addEventListener("click", () => {
     const txt = input.value.trim();
     if (!txt) return;
@@ -44,10 +57,5 @@ input.addEventListener("keypress", (e) => {
     if (e.key === "Enter") sendBtn.click();
 });
 
-newBtn.addEventListener("click", () => {
-    chatHistory = [];
-    saveChat();
-    renderMessages();
-});
-
+// Render chat on load
 renderMessages();
