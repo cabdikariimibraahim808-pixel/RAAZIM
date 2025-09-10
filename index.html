@@ -16,6 +16,7 @@
        href="https://wa.me/252637762739?text=Hello%20RAAZIM%20Bus%2C%20I%20would%20like%20to%20book%20a%20ticket.">
        Book Now
     </a>
+    <button id="ai-btn">AI ASSISTANT</button>
   </nav>
 </header>
 
@@ -35,29 +36,16 @@
   <section id="routes" class="section">
     <h2>Our Routes</h2>
     <div class="cards">
-      <div class="card">
-        <img src="https://images.unsplash.com/photo-1517824806704-9040b037703b?auto=format&fit=crop&w=1200&q=80" alt="Borama">
-        <h3>Borama</h3>
-      </div>
-      <div class="card">
-        <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1200&q=80" alt="Hargeisa">
-        <h3>Hargeisa</h3>
-      </div>
-      <div class="card">
-        <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1200&q=80" alt="Burco">
-        <h3>Burco</h3>
-      </div>
+      <div class="card"><h3>Borama</h3></div>
+      <div class="card"><h3>Hargeisa</h3></div>
+      <div class="card"><h3>Burco</h3></div>
     </div>
   </section>
 
   <section id="services" class="section">
     <h2>Our Services</h2>
     <div class="cards services">
-      <div class="card">
-        <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1200&q=80" alt="WiFi">
-        <h3>Free WiFi</h3>
-        <p>Stay connected with onboard WiFi on every trip.</p>
-      </div>
+      <div class="card"><h3>Free WiFi</h3></div>
     </div>
   </section>
 </main>
@@ -68,13 +56,17 @@
   <p>© 2025 RAAZIM Bus — All Rights Reserved</p>
 </footer>
 
-<!-- Chatbot Widget -->
-<div id="chatbot">
-  <div id="chatbot-header">RAAZIM AI</div>
+<!-- Fullscreen Chatbot -->
+<div id="chatbot-container">
+  <div id="chatbot-header">
+    <span>RAAZIM AI</span>
+    <button id="chatbot-back">Back</button>
+  </div>
   <div id="chatbot-messages"></div>
-  <input type="text" id="chatbot-input" placeholder="Ask me something...">
-  <button id="chatbot-send">Send</button>
-  <button id="chatbot-new">New Chat</button>
+  <div id="chatbot-footer">
+    <input type="text" id="chatbot-input" placeholder="Ask me anything...">
+    <button id="chatbot-send">Send</button>
+  </div>
 </div>
 
 <script src="index.js"></script>
