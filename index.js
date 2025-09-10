@@ -1,54 +1,65 @@
-// Footer AI button
-const aiBtn = document.getElementById("ai-btn-footer");
-const chatbot = document.getElementById("chatbot-container");
-const backBtn = document.getElementById("chatbot-back");
-const chatMessages = document.getElementById("chatbot-messages");
-const chatInput = document.getElementById("chatbot-input");
-const sendBtn = document.getElementById("chatbot-send");
+const aiModal = document.getElementById("ai-modal");
+const openAiBtn = document.getElementById("open-ai-btn");
+const closeAiBtn = document.getElementById("close-ai-btn");
+const aiChat = document.getElementById("ai-chat");
+const aiInput = document.getElementById("ai-input");
+const aiSend = document.getElementById("ai-send");
 
-// Chat history
-let chatHistory = JSON.parse(localStorage.getItem("raazimChat")) || [];
+// Responses for the AI
+const responses = [
+  { keywords: ["owner", "who owns", "raazim owner"], reply: "The owner is Cabdikariim Mohamoud." },
+  { keywords: ["bus", "raazim"], reply: "RAAZIM Bus operates between Borama, Hargeisa, and Burco." },
+  { keywords: ["wifi"], reply: "Yes, we provide free WiFi on all trips." },
+  { keywords: ["routes"], reply: "You can see our routes under the Routes section." },
+];
 
-function saveChat() {
-    localStorage.setItem("raazimChat", JSON.stringify(chatHistory));
-}
-
-function renderMessages() {
-    chatMessages.innerHTML = "";
-    chatHistory.forEach(msg => {
-        const div = document.createElement("div");
-        div.classList.add("chatbot-msg", msg.sender === "user" ? "user-msg" : "ai-msg");
-        div.textContent = msg.text;
-        chatMessages.appendChild(div);
-    });
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-}
-
-function botResponse(text) {
-    text = text.toLowerCase();
-    if (text.includes("owner")) return "The owner is Cabdikariim Mohamoud.";
-    if (text.includes("routes")) return "Check our routes section above! ⬆️";
-    if (text.includes("services")) return "Visit our services section for details.";
-    if (text.includes("book")) return "You can book via WhatsApp using the buttons above.";
-    return "I'm here to help with anything about RAAZIM Bus!";
-}
-
-// Open/Close chatbot
-aiBtn.addEventListener("click", () => { chatbot.style.display = "flex"; });
-backBtn.addEventListener("click", () => { chatbot.style.display = "none"; });
-
-// Send message
-sendBtn.addEventListener("click", () => {
-    const text = chatInput.value.trim();
-    if(!text) return;
-    chatHistory.push({ sender:"user", text });
-    chatHistory.push({ sender:"ai", text:botResponse(text) });
-    renderMessages();
-    saveChat();
-    chatInput.value = "";
+// Open AI Modal
+openAiBtn.addEventListener("click", () => {
+  aiModal.classList.remove("hidden");
+  aiInput.focus();
 });
 
-chatInput.addEventListener("keypress",(e)=>{if(e.key==="Enter")sendBtn.click();});
+// Close AI Modal
+closeAiBtn.addEventListener("click", () => {
+  aiModal.classList.add("hidden");
+});
 
-// Render on load
-renderMessages();
+// Send message
+aiSend.addEventListener("click", () => {
+  sendMessage();
+});
+
+aiInput.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") sendMessage();
+});
+
+function sendMessage() {
+  const message = aiInput.value.trim();
+  if (!message) return;
+
+  appendMessage(message, "user-message");
+  aiInput.value = "";
+
+  setTimeout(() => {
+    const reply = getReply(message);
+    appendMessage(reply, "ai-message");
+  }, 800);
+}
+
+function appendMessage(text, className) {
+  const div = document.createElement("div");
+  div.classList.add(className);
+  div.textContent = text;
+  aiChat.appendChild(div);
+  aiChat.scrollTop = aiChat.scrollHeight;
+}
+
+function getReply(message) {
+  message = message.toLowerCase();
+  for (let res of responses) {
+    for (let key of res.keywords) {
+      if (message.includes(key)) return res.reply;
+    }
+  }
+  return "I’m sorry, I don’t have that information right now.";
+}
