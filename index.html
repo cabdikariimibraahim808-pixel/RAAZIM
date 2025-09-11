@@ -12,6 +12,8 @@
   <nav class="nav">
     <a href="#routes">Routes</a>
     <a href="#services">Services</a>
+    <a href="#maps">Maps</a>
+    <a href="#assistant">AI Assistant</a>
     <a class="book-btn" target="_blank" rel="noopener"
        href="https://wa.me/252637762739?text=Hello%20RAAZIM%20Bus%2C%20I%20would%20like%20to%20book%20a%20ticket.">
        Book Now
@@ -71,12 +73,20 @@
         <p>Stay connected with onboard WiFi on every trip.</p>
       </div>
     </div>
-    <div class="center">
-      <a class="cta-btn" target="_blank" rel="noopener"
-         href="https://wa.me/252637762739?text=Hello%20RAAZIM%20Bus%2C%20I%20would%20like%20to%20know%20more%20about%20your%20services.">
-         Ask About Services
-      </a>
-    </div>
+  </section>
+
+  <!-- Maps Section -->
+  <section id="maps" class="section">
+    <h2>Maps</h2>
+    <p>Check our location and routes on the map.</p>
+    <button id="open-map-btn" class="cta-btn">View Map</button>
+  </section>
+
+  <!-- AI Assistant Section -->
+  <section id="assistant" class="section">
+    <h2>AI Assistant</h2>
+    <p>Ask questions about RAAZIM Bus services, routes, and more.</p>
+    <button id="open-assistant-btn" class="cta-btn">Open AI Assistant</button>
   </section>
 </main>
 
@@ -86,29 +96,24 @@
   <p>© 2025 RAAZIM Bus — All Rights Reserved</p>
 </footer>
 
-<!-- ===== Map widget: tiny button bottom-right + expandable map panel ===== -->
-<div id="map-widget" aria-hidden="false">
-  <!-- small round button showing a pin/preview -->
-  <button id="map-open-btn" class="map-open-btn" aria-label="Open map">📍</button>
+<!-- Map Overlay -->
+<div id="map-overlay" class="overlay hidden">
+  <div class="overlay-content">
+    <button class="close-btn" id="close-map-btn">✕</button>
+    <iframe
+      src="https://www.google.com/maps?q=9.933,43.183&z=12&output=embed"
+      width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+  </div>
+</div>
 
-  <!-- When opened, this panel appears above the button -->
-  <div id="map-panel" class="map-panel hidden" role="dialog" aria-modal="true" aria-label="Map panel">
-    <div class="map-panel-header">
-      <strong>RAAZIM Bus — Map</strong>
-      <button id="map-close-btn" class="map-close-btn" aria-label="Close map">✕</button>
-    </div>
-    <div class="map-frame-wrap">
-      <!-- Google Maps embed (no API key needed) — centered on Borama coordinates -->
-      <iframe
-        id="map-iframe"
-        src="https://www.google.com/maps?q=9.933,43.183&z=12&output=embed"
-        width="100%"
-        height="100%"
-        frameborder="0"
-        style="border:0;"
-        allowfullscreen=""
-        loading="lazy"
-      ></iframe>
+<!-- AI Assistant Overlay -->
+<div id="assistant-overlay" class="overlay hidden">
+  <div class="overlay-content assistant-box">
+    <button class="close-btn" id="close-assistant-btn">✕</button>
+    <div id="chat-box" class="chat-box"></div>
+    <div class="chat-input">
+      <input type="text" id="chat-input" placeholder="Ask me something...">
+      <button id="send-btn">Send</button>
     </div>
   </div>
 </div>
