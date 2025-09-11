@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>RAAZIM Bus Transport</title>
-  <link rel="stylesheet" href="index.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAAZIM Bus Transport</title>
+<link rel="stylesheet" href="index.css">
 </head>
 <body>
 <header class="site-header">
@@ -12,8 +12,6 @@
   <nav class="nav">
     <a href="#routes">Routes</a>
     <a href="#services">Services</a>
-    <a href="#maps">Maps</a>
-    <a href="#assistant">AI Assistant</a>
     <a class="book-btn" target="_blank" rel="noopener"
        href="https://wa.me/252637762739?text=Hello%20RAAZIM%20Bus%2C%20I%20would%20like%20to%20book%20a%20ticket.">
        Book Now
@@ -72,21 +70,19 @@
         <h3>Free WiFi</h3>
         <p>Stay connected with onboard WiFi on every trip.</p>
       </div>
+      <div class="card">
+        <img src="https://images.unsplash.com/photo-1611695187595-c7fc8d965c0a?auto=format&fit=crop&w=1200&q=80" alt="AI Assistant">
+        <h3>AI Assistant</h3>
+        <p>Get instant assistance for your bookings and queries.</p>
+        <button class="cta-btn" id="open-ai-btn">AI Assistant</button>
+      </div>
+      <div class="card">
+        <img src="https://images.unsplash.com/photo-1596495577886-d920f3d1de45?auto=format&fit=crop&w=1200&q=80" alt="Maps">
+        <h3>Maps</h3>
+        <p>Locate our terminals and routes easily.</p>
+        <button class="cta-btn" id="open-map-btn">Open Map</button>
+      </div>
     </div>
-  </section>
-
-  <!-- Maps Section -->
-  <section id="maps" class="section">
-    <h2>Maps</h2>
-    <p>Check our location and routes on the map.</p>
-    <button id="open-map-btn" class="cta-btn">View Map</button>
-  </section>
-
-  <!-- AI Assistant Section -->
-  <section id="assistant" class="section">
-    <h2>AI Assistant</h2>
-    <p>Ask questions about RAAZIM Bus services, routes, and more.</p>
-    <button id="open-assistant-btn" class="cta-btn">Open AI Assistant</button>
   </section>
 </main>
 
@@ -96,25 +92,27 @@
   <p>© 2025 RAAZIM Bus — All Rights Reserved</p>
 </footer>
 
-<!-- Map Overlay -->
-<div id="map-overlay" class="overlay hidden">
+<!-- --- AI Assistant Overlay --- -->
+<div class="overlay hidden" id="ai-overlay">
   <div class="overlay-content">
-    <button class="close-btn" id="close-map-btn">✕</button>
-    <iframe
-      src="https://www.google.com/maps?q=9.933,43.183&z=12&output=embed"
-      width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+    <button class="close-btn" id="close-ai-btn">Back</button>
+    <div class="assistant-box">
+      <div id="ai-chat" class="chat-box"></div>
+      <div class="chat-input">
+        <input type="text" id="ai-input" placeholder="Type your question...">
+        <button id="ai-send">Send</button>
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- AI Assistant Overlay -->
-<div id="assistant-overlay" class="overlay hidden">
-  <div class="overlay-content assistant-box">
-    <button class="close-btn" id="close-assistant-btn">✕</button>
-    <div id="chat-box" class="chat-box"></div>
-    <div class="chat-input">
-      <input type="text" id="chat-input" placeholder="Ask me something...">
-      <button id="send-btn">Send</button>
-    </div>
+<!-- --- Map Overlay --- -->
+<div class="overlay hidden" id="map-overlay">
+  <div class="overlay-content">
+    <button class="close-btn" id="close-map-btn">Back</button>
+    <iframe 
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3875.424920378557!2d45.336167!3d9.558174!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zOcKwMzMnMzAuOCJOIDQ1wrAyMCcwNS4xIkU!5e0!3m2!1sen!2sso!4v1694670000000!5m2!1sen!2sso" 
+      width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
   </div>
 </div>
 
