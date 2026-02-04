@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raazim Premium | VIP Logistics & Transport</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;600;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="icon" href="favicon.png.png" type="image/png">
+    <link rel="apple-touch-icon" href="favicon.png.png">
+
+    <style>
+        :root {
+            --sky: #87CEEB;
+            --navy: #0f172a;
+            --gold: #f59e0b;
+            --white: #ffffff;
+            --slate: #f8fafc;
+            --border: #e2e8f0;
+            --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* --- BASE RESET & LUXURY TYPOGRAPHY --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-font-smoothing: antialiased; }
+        body { background: var(--slate); color: var(--navy); overflow-x: hidden; scroll-behavior: smooth; }
+        
+        /* SCROLLBAR CUSTOMIZATION */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--slate); }
+        ::-webkit-scrollbar-thumb { background: var(--navy); border-radius: 10px; }
+
+        /* --- DYNAMIC HEADER --- */
+        header {
+            position: fixed; top: 0; width: 100%; z-index: 2000;
+            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px);
+            padding: 1.2rem 8%; display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid var(--border); box-shadow: 0 4px 30px rgba(0,0,0,0.03);
+        }
+        .brand { display: flex; align-items: center; text-decoration: none; transition: var(--transition); }
+        .brand:hover { transform: scale(1.02); }
+        .brand-swash {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            padding: 10px 26px 10px 16px;
+            background: var(--sky);
+            color: var(--navy);
+            border-radius: 16px 6px 6px 16px;
+            box-shadow: 0 12px 26px rgba(15, 23, 42, 0.18);
+            overflow: hidden;
+        }
+        .brand-swash::after {
+            content: '';
+            position: absolute;
+            right: -22px;
+            top: 0;
+            width: 0;
+            height: 0;
+            border-top: 28px solid transparent;
+            border-bottom: 28px solid transparent;
+            border-left: 22px solid var(--sky);
+        }
+        .brand-swash::before {
+            content: '';
+            position: absolute;
+            right: 6px;
+            top: 50%;
+            width: 14px;
+            height: 14px;
+            background: #5bbde5;
+            transform: translateY(-50%) rotate(45deg);
+            box-shadow: 0 0 0 6px var(--sky);
+            opacity: 0.9;
+        }
+        .logo-box { width: 48px; height: 48px; background: linear-gradient(135deg, var(--sky), #60a5fa); border-radius: 14px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(135, 206, 235, 0.4); overflow: hidden; }
+        .logo-img { width: 100%; height: 100%; object-fit: contain; display: block; }
+        .logo-fallback { display: none; width: 100%; height: 100%; align-items: center; justify-content: center; }
+        .brand h1 { font-size: 1.4rem; font-weight: 800; letter-spacing: -1px; text-transform: uppercase; color: var(--navy); }
+
+        .nav-menu { display: flex; gap: 30px; align-items: center; }
+        .nav-link { text-decoration: none; color: var(--navy); font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; position: relative; }
+        .nav-link::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px; background: var(--sky); transition: 0.3s; }
+        .nav-link:hover::after { width: 100%; }
+        .menu-toggle-wrap { display: none; flex-direction: column; align-items: center; gap: 6px; }
+        .menu-toggle { width: 44px; height: 44px; border-radius: 12px; border: 1px solid var(--border); background: white; color: var(--navy); align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); }
+        .menu-toggle:hover { box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08); }
+        .menu-label { font-size: 0.65rem; letter-spacing: 1px; text-transform: uppercase; color: #64748b; font-weight: 700; }
+        .mobile-menu { display: none; position: fixed; top: 78px; left: 0; right: 0; background: rgba(255,255,255,0.98); backdrop-filter: blur(18px); border-bottom: 1px solid var(--border); box-shadow: 0 15px 30px rgba(15,23,42,0.08); padding: 20px 8%; z-index: 1800; }
+        .mobile-menu.active { display: block; }
+        .mobile-menu .nav-link { display: block; padding: 12px 0; }
+        .mobile-menu .btn { width: 100%; justify-content: center; margin-top: 12px; }
+
+        /* --- BUTTON SYSTEM --- */
+        .btn { padding: 14px 28px; border-radius: 50px; border: none; font-weight: 800; cursor: pointer; transition: var(--transition); display: inline-flex; align-items: center; gap: 10px; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px; }
+        .btn-primary { background: var(--navy); color: white; box-shadow: 0 10px 20px rgba(15, 23, 42, 0.15); }
+        .btn-primary:hover { background: var(--sky); color: var(--navy); transform: translateY(-3px); }
+        .btn-wa { background: #25D366; color: white; }
+        .btn-wa:hover { background: #1ed760; box-shadow: 0 10px 20px rgba(37, 211, 102, 0.2); }
+
+        /* --- VIEW ARCHITECTURE --- */
+        .view { display: none; min-height: 100vh; padding-top: 120px; padding-bottom: 100px; animation: slideUp 0.6s ease-out; }
+        .view.active { display: block; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- HERO & VISUALS --- */
+        .hero-section { position: relative; height: 50vh; margin: 0 4%; border-radius: 35px; overflow: hidden; display: flex; align-items: center; justify-content: center; color: white; text-align: center; }
+        .hero-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(15,23,42,0.8), rgba(15,23,42,0.3)), url('hero.png') center/cover; z-index: -1; transition: 5s ease; transform: scale(1.1); }
+        .hero-section:hover .hero-bg { transform: scale(1); }
+        .hero-content h2 { font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 800; margin-bottom: 15px; }
+
+        /* --- DESTINATION HUBS --- */
+        .section-title { text-align: center; margin-bottom: 50px; }
+        .section-title h3 { font-size: 2.2rem; font-weight: 800; }
+        .hubs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; max-width: 1300px; margin: 0 auto; padding: 0 20px; }
+        .city-card { background: white; border-radius: 30px; overflow: hidden; border: 1px solid var(--border); transition: var(--transition); cursor: pointer; }
+        .city-card:hover { transform: translateY(-15px); border-color: var(--sky); box-shadow: var(--shadow-xl); }
+        .city-img { height: 250px; width: 100%; object-fit: cover; }
+        .city-info { padding: 30px; text-align: center; }
+
+        /* --- BOOKING ENGINE --- */
+        .booking-console { max-width: 1200px; margin: -80px auto 80px; background: white; padding: 50px; border-radius: 40px; box-shadow: var(--shadow-xl); position: relative; z-index: 100; border: 1px solid var(--border); }
+        .input-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 25px; }
+        .field-group { display: flex; flex-direction: column; gap: 10px; }
+        .field-group label { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; color: #94a3b8; letter-spacing: 2px; }
+        .field-group select, .field-group input { padding: 16px; border: 2px solid #f1f5f9; border-radius: 16px; font-weight: 700; outline: none; transition: 0.3s; background: #f8fafc; }
+        .field-group select:focus { border-color: var(--sky); background: white; }
+
+        /* --- VIP 10 SEAT MAP --- */
+        .cabin-container { max-width: 500px; margin: 50px auto; background: white; padding: 40px; border-radius: 40px; border: 1px solid var(--border); box-shadow: var(--shadow-xl); }
+        .vip-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .vip-seat { aspect-ratio: 1; background: #f1f5f9; border-radius: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; border: 2px solid #e2e8f0; }
+        .vip-seat i { font-size: 1.2rem; margin-bottom: 5px; }
+        .vip-seat:hover { border-color: var(--sky); color: var(--sky); }
+        .vip-seat.selected { background: var(--sky); color: white; border-color: var(--sky); transform: translateY(-5px); box-shadow: 0 10px 20px rgba(135, 206, 235, 0.4); }
+        .aisle-space { display: flex; align-items: center; justify-content: center; font-size: 0.6rem; color: #cbd5e1; font-weight: 800; text-transform: uppercase; }
+
+        /* --- CARGO SYSTEM --- */
+        .cargo-surface { max-width: 800px; margin: 0 auto; background: white; padding: 60px; border-radius: 40px; border: 1px solid var(--border); }
+        .price-hero { font-size: 5rem; font-weight: 800; text-align: center; margin: 30px 0; color: var(--navy); font-family: 'Space Mono', monospace; }
+
+        /* --- TICKET & EXPORT --- */
+        .ticket-frame { max-width: 550px; margin: 0 auto; padding: 20px; }
+        #finalTicket { background: white; border-radius: 40px; overflow: hidden; border: 2px solid var(--border); position: relative; }
+        .t-header { background: var(--navy); color: white; padding: 40px; text-align: center; position: relative; }
+        .t-header::after { content: ''; position: absolute; bottom: -15px; left: 0; width: 100%; height: 30px; background: white; border-radius: 50% 50% 0 0; }
+        .t-content { padding: 50px 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        .t-data label { display: block; font-size: 0.65rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 1px; }
+        .t-data p { font-size: 1.2rem; font-weight: 800; color: var(--navy); }
+
+        /* --- FOOTER --- */
+        footer { background: var(--navy); color: white; padding: 100px 8% 50px; margin-top: 100px; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 60px; }
+        .social-row { display: flex; gap: 20px; margin-top: 30px; }
+        .social-btn { width: 50px; height: 50px; background: rgba(255,255,255,0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; transition: 0.3s; font-size: 1.2rem; }
+        .social-btn:hover { background: var(--sky); color: var(--navy); transform: rotate(360deg); }
+        .footer-credit { margin-top: 70px; padding: 30px; border-top: 1px solid rgba(255,255,255,0.08); text-align: center; background: linear-gradient(135deg, rgba(135,206,235,0.15), rgba(245,158,11,0.12)); border-radius: 20px; }
+        .footer-credit p { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 3px; opacity: 0.6; margin-bottom: 8px; }
+        .footer-credit strong { display: inline-block; font-size: 1.1rem; letter-spacing: 2px; color: white; padding: 6px 14px; border: 1px solid rgba(255,255,255,0.25); border-radius: 999px; }
+
+        /* --- CHATBOT --- */
+        .chatbot-launcher {
+            position: fixed; right: 24px; bottom: 24px; z-index: 2500;
+            width: 60px; height: 60px; border-radius: 50%;
+            border: none; cursor: pointer; background: var(--navy); color: white;
+            box-shadow: 0 15px 30px rgba(15,23,42,0.25); transition: var(--transition);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .chatbot-launcher:hover { transform: translateY(-4px); background: var(--sky); color: var(--navy); }
+        .chatbot {
+            position: fixed; right: 24px; bottom: 96px; z-index: 2500;
+            width: min(360px, 92vw); background: white; border-radius: 22px;
+            box-shadow: var(--shadow-xl); border: 1px solid var(--border);
+            overflow: hidden; display: none; flex-direction: column;
+        }
+        .chatbot.active { display: flex; }
+        .chatbot-header {
+            background: var(--navy); color: white; padding: 16px 18px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .chatbot-title { font-weight: 800; letter-spacing: 1px; text-transform: uppercase; font-size: 0.8rem; }
+        .chatbot-body { padding: 16px; background: #f8fafc; height: 330px; overflow-y: auto; }
+        .chatbot-msg { margin-bottom: 12px; display: flex; }
+        .chatbot-msg.user { justify-content: flex-end; }
+        .chatbot-bubble {
+            max-width: 78%; padding: 10px 12px; border-radius: 14px; font-size: 0.85rem;
+            line-height: 1.4; background: white; border: 1px solid var(--border);
+        }
+        .chatbot-msg.user .chatbot-bubble { background: var(--navy); color: white; border-color: var(--navy); }
+        .chatbot-footer { padding: 12px; display: grid; grid-template-columns: 1fr auto; gap: 8px; background: white; }
+        .chatbot-input { border: 1px solid var(--border); border-radius: 12px; padding: 10px 12px; font-size: 0.85rem; }
+        .chatbot-send { border: none; border-radius: 12px; background: var(--gold); color: white; padding: 10px 14px; font-weight: 800; cursor: pointer; }
+        .chatbot-quick { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+        .chatbot-chip {
+            padding: 6px 10px; border-radius: 999px; border: 1px solid var(--border);
+            background: white; font-size: 0.7rem; cursor: pointer; text-transform: uppercase; letter-spacing: 1px;
+        }
+
+        /* --- RESPONSIVE ADJUSTMENTS --- */
+        @media (max-width: 768px) {
+            header { padding: 1rem 5%; }
+            .nav-menu { display: none; }
+            .booking-console { margin-top: -40px; padding: 30px; }
+            .hero-content h2 { font-size: 2.8rem; }
+            .menu-toggle-wrap { display: inline-flex; }
+            .mobile-menu { top: 72px; }
+        }
+        @media (max-width: 600px) {
+            header { padding: 0.9rem 4%; }
+            .brand h1 { font-size: 1.1rem; }
+            .brand-swash { padding: 8px 20px 8px 12px; border-radius: 14px 6px 6px 14px; }
+            .brand-swash::after { border-top-width: 22px; border-bottom-width: 22px; border-left-width: 18px; right: -18px; }
+            .brand-swash::before { right: 4px; width: 12px; height: 12px; box-shadow: 0 0 0 5px var(--navy); }
+            .logo-box { width: 40px; height: 40px; border-radius: 12px; }
+            .hero-section { height: 42vh; margin: 0 3%; border-radius: 24px; }
+            .hero-content h2 { font-size: 2.2rem; }
+            .booking-console { margin: -30px 4% 60px; padding: 24px; border-radius: 28px; }
+            .input-row { grid-template-columns: 1fr; gap: 16px; }
+            .btn { width: 100%; justify-content: center; }
+            .section-title h3 { font-size: 1.7rem; }
+            .hubs-grid { gap: 18px; padding: 0 16px; }
+            .city-img { height: 210px; }
+            .cabin-container { margin: 30px 4%; padding: 24px; border-radius: 28px; }
+            .vip-grid { gap: 12px; }
+            .cargo-surface { margin: 0 4%; padding: 30px; border-radius: 28px; }
+            .price-hero { font-size: 3rem; }
+            .ticket-frame { padding: 0 4%; }
+            .t-content { grid-template-columns: 1fr; gap: 20px; padding: 30px 24px; }
+            .t-data { grid-column: span 1; }
+            footer { padding: 80px 6% 40px; }
+            .footer-grid { gap: 30px; }
+        }
+        @media (max-width: 420px) {
+            .hero-content h2 { font-size: 1.9rem; }
+            .section-title h3 { font-size: 1.5rem; }
+            .city-img { height: 190px; }
+            .price-hero { font-size: 2.6rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="#" class="brand" onclick="showView('home')">
+            <span class="brand-swash">
+                <div class="logo-box">
+                    <img src="logo.png" alt="Raazim Premium logo" class="logo-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <i class="fas fa-crown logo-fallback" style="color:white"></i>
+                </div>
+                <h1>RAAZIM<span>PREMIUM</span></h1>
+            </span>
+        </a>
+        <div class="menu-toggle-wrap">
+            <button class="menu-toggle" aria-label="Open menu" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+            <span class="menu-label">more</span>
+        </div>
+        <nav class="nav-menu">
+            <span class="nav-link" onclick="showView('home')">Book Seat</span>
+            <span class="nav-link" onclick="showView('cargo')">Cargo Hub</span>
+            <span class="nav-link" onclick="showView('fleet')">About Us</span>
+            <button class="btn btn-primary" onclick="window.open('https://wa.me/252637762739')">
+                <i class="fab fa-whatsapp"></i> +252 637762739
+            </button>
+        </nav>
+    </header>
+    <nav id="mobileMenu" class="mobile-menu">
+        <span class="nav-link" onclick="showView('home'); toggleMobileMenu(false)">Book Seat</span>
+        <span class="nav-link" onclick="showView('cargo'); toggleMobileMenu(false)">Cargo Hub</span>
+        <span class="nav-link" onclick="showView('fleet'); toggleMobileMenu(false)">About Us</span>
+        <button class="btn btn-primary" onclick="window.open('https://wa.me/252637762739')">
+            <i class="fab fa-whatsapp"></i> +252 637762739
+        </button>
+    </nav>
+
+    <section id="homeView" class="view active">
+        <div class="hero-section">
+            <div class="hero-bg"></div>
+            <div class="hero-content animate__animated animate__fadeIn">
+                <p style="letter-spacing: 8px; font-weight: 200; text-transform: uppercase;">The New Standard of Travel</p>
+                <h2>Premium VIP Transit</h2>
+                <div style="display: flex; gap: 20px; justify-content: center; margin-top: 20px;">
+                    <span style="background: rgba(255,255,255,0.2); padding: 8px 20px; border-radius: 20px; font-size: 0.8rem; backdrop-filter: blur(5px);">Hargeisa</span>
+                    <span style="background: rgba(255,255,255,0.2); padding: 8px 20px; border-radius: 20px; font-size: 0.8rem; backdrop-filter: blur(5px);">Borama</span>
+                    <span style="background: rgba(255,255,255,0.2); padding: 8px 20px; border-radius: 20px; font-size: 0.8rem; backdrop-filter: blur(5px);">Burco</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="booking-console" id="engine">
+            <div class="input-row">
+                <div class="field-group">
+                    <label>From Hub</label>
+                    <select id="origin">
+                        <option>Hargeisa Terminal</option>
+                        <option>Borama Main</option>
+                        <option>Burco Station</option>
+                    </select>
+                </div>
+                <div class="field-group">
+                    <label>To Destination</label>
+                    <select id="destination">
+                        <option>Borama Main</option>
+                        <option>Hargeisa Terminal</option>
+                        <option>Burco Station</option>
+                    </select>
+                </div>
+                <div class="field-group">
+                    <label>Travel Date</label>
+                    <input type="date" id="tripDate">
+                </div>
+                <div class="field-group">
+                    <label>Class Level</label>
+                    <select id="tripClass">
+                        <option value="6" selected>Standard ($6)</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" onclick="initVIPSeats()">Check Seats</button>
+            </div>
+        </div>
+
+        <div class="section-title">
+            <p style="color: var(--sky); font-weight: 800; letter-spacing: 2px;">DESTINATIONS</p>
+            <h3>Major Regions Served</h3>
+        </div>
+
+        <div class="hubs-grid">
+            <div class="city-card" onclick="autoRoute('Hargeisa Terminal')">
+                <img src="Hergeisa.jpg" class="city-img">
+                <div class="city-info">
+                    <h4>Hargeisa</h4>
+                    <p>Capital city departures every 3 hours.</p>
+                </div>
+            </div>
+            <div class="city-card" onclick="autoRoute('Borama Main')">
+                <img src="Borama.jpg" class="city-img">
+                <div class="city-info">
+                    <h4>Borama</h4>
+                    <p>Connecting the Awdal region's education hub.</p>
+                </div>
+            </div>
+            <div class="city-card" onclick="autoRoute('Burco Station')">
+                <img src="Burco.png" class="city-img">
+                <div class="city-info">
+                    <h4>Burco</h4>
+                    <p>Heart of Togdheer trading routes.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="seatArea" style="display: none; padding-bottom: 50px;">
+            <div class="cabin-container">
+                <h4 style="text-align:center; margin-bottom:30px; letter-spacing:3px; color:#94a3b8;">VIP CABIN (10 SEATS)</h4>
+                <div class="vip-grid" id="vipGrid"></div>
+                <button class="btn btn-primary" style="width:100%; margin-top:40px; height: 65px;" onclick="generateManifest()">Finalize Booking</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="cargoView" class="view">
+        <div class="cargo-surface">
+            <div style="text-align:center; margin-bottom: 50px;">
+                <h2 style="font-size: 2.5rem; font-weight: 800;">Logistics Calculator</h2>
+                <p style="color: #64748b;">Calculate your shipping costs instantly.</p>
+            </div>
+            <div class="input-row" style="margin-bottom: 30px;">
+                <div class="field-group">
+                    <label>Weight (Kilograms)</label>
+                    <input type="number" id="cWeight" value="1" oninput="updateCargoMath()">
+                </div>
+                <div class="field-group">
+                    <label>Package Nature</label>
+                    <select id="cType" onchange="updateCargoMath()">
+                        <option value="1">Normal Box</option>
+                        <option value="1.8">Sensitive Electronics</option>
+                        <option value="2.5">Fragile/Glass</option>
+                    </select>
+                </div>
+            </div>
+            <div class="price-hero" id="cTotal">$0.00</div>
+            <button class="btn btn-wa" style="width:100%; height: 70px;" onclick="window.open('https://wa.me/252637762739')">
+                <i class="fab fa-whatsapp"></i> Book Cargo Shipment
+            </button>
+        </div>
+    </section>
+
+    <section id="fleetView" class="view">
+        <div class="section-title">
+            <p style="color: var(--sky); font-weight: 800; letter-spacing: 2px;">ABOUT US</p>
+            <h3>Raazim Premium at a Glance</h3>
+        </div>
+        <div class="hubs-grid">
+            <div class="city-card">
+                <img src="1.png" class="city-img">
+                <div class="city-info">
+                    <h4>Our Mission</h4>
+                    <p>Deliver safe, punctual, and premium travel experiences across Somaliland.</p>
+                </div>
+            </div>
+            <div class="city-card">
+                <img src="2.png" class="city-img">
+                <div class="city-info">
+                    <h4>Why Choose Us</h4>
+                    <p>VIP comfort, professional crew, and reliable schedules you can count on.</p>
+                </div>
+            </div>
+            <div class="city-card">
+                <img src="3.png" class="city-img">
+                <div class="city-info">
+                    <h4>Our Promise</h4>
+                    <p>Transparent pricing, secure cargo handling, and 24/7 customer support.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="ticketView" class="view">
+        <div class="ticket-frame">
+            <div id="finalTicket">
+                <div class="t-header">
+                    <p style="letter-spacing: 5px; font-size: 0.7rem; font-weight: 800; opacity: 0.6;">RAAZIM PREMIUM</p>
+                    <h2 style="margin: 10px 0;">Official Ticket</h2>
+                    <p id="tCode" style="font-family:'Space Mono'; color: var(--sky); font-size: 1.2rem;">#RZ-0000</p>
+                </div>
+                <div class="t-content">
+                    <div class="t-data" style="grid-column: span 2; border-bottom: 1px dashed var(--border); padding-bottom: 20px;">
+                        <label>Journey Route</label>
+                        <p id="tRoute">--</p>
+                    </div>
+                    <div class="t-data"><label>Seat</label><p id="tSeat">--</p></div>
+                    <div class="t-data"><label>Date</label><p id="tDate">--</p></div>
+                    <div class="t-data"><label>Price</label><p id="tPrice">--</p></div>
+                    <div class="t-data"><label>Status</label><p style="color: #25D366;">CONFIRMED</p></div>
+                    <div style="grid-column: span 2; text-align: center; margin-top: 20px;">
+                        <div id="qrCode" style="display:inline-block;"></div>
+                    </div>
+                </div>
+            </div>
+            <div style="margin-top: 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <button class="btn btn-primary" onclick="downloadTicketImage()"><i class="fas fa-file-image"></i> Save JPEG</button>
+                <button class="btn btn-wa" onclick="finishWhatsApp()"><i class="fab fa-whatsapp"></i> Send to Office</button>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-grid">
+            <div>
+                <h3>RAAZIM PREMIUM</h3>
+                <p style="opacity: 0.6; margin-top: 20px; font-size: 0.9rem; line-height: 1.8;">Leading the Somaliland transport industry with innovative VIP experiences and high-speed logistics solutions.</p>
+                <div class="social-row">
+                    <a href="#" class="social-btn"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-btn"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-btn"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+            <div>
+                <h4>Contact Us</h4>
+                <p style="opacity: 0.6; font-size: 0.9rem; margin-top: 20px;">24/7 Hotline: +252 637762739</p>
+                <p style="opacity: 0.6; font-size: 0.9rem;">Main Office: Hargeisa, SL</p>
+            </div>
+            <div>
+                <h4>Services</h4>
+                <p style="opacity: 0.6; font-size: 0.9rem; margin-top: 20px;">VIP Passenger Transit</p>
+                <p style="opacity: 0.6; font-size: 0.9rem;">Secure Cargo Delivery</p>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 80px; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.05); font-size: 0.75rem; opacity: 0.5;">
+            &copy; 2026 Raazim Premium Logistics. All Rights Reserved. Website by RT Solutions.
+        </div>
+        <div class="footer-credit">
+            <p>Made By</p>
+            <strong>RT Solutions</strong>
+        </div>
+    </footer>
+
+    <button class="chatbot-launcher" aria-label="Chatbot" onclick="toggleChatbot()">
+        <i class="fas fa-comments"></i>
+    </button>
+    <div id="chatbot" class="chatbot" aria-live="polite">
+        <div class="chatbot-header">
+            <div class="chatbot-title">Raazim Help</div>
+            <button class="menu-toggle" aria-label="Close chat" onclick="toggleChatbot(false)" style="width:36px;height:36px;">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="chatbot-body" id="chatBody">
+            <div class="chatbot-quick" id="chatQuick"></div>
+        </div>
+        <div class="chatbot-footer">
+            <input id="chatInput" class="chatbot-input" type="text" placeholder="Ask in English or Somali..." />
+            <button class="chatbot-send" onclick="sendChat()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        let bookingData = { seat: null };
+
+        function showView(id) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById(id + 'View').classList.add('active');
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+        function toggleMobileMenu(forceClose) {
+            const menu = document.getElementById('mobileMenu');
+            if (forceClose === false) {
+                menu.classList.remove('active');
+                return;
+            }
+            if (forceClose === true) {
+                menu.classList.add('active');
+                return;
+            }
+            menu.classList.toggle('active');
+        }
+
+        function autoRoute(city) {
+            document.getElementById('destination').value = city;
+            document.getElementById('engine').scrollIntoView({behavior: 'smooth'});
+        }
+
+        function initVIPSeats() {
+            if(!document.getElementById('tripDate').value) return alert("Select Travel Date");
+            
+            document.getElementById('seatArea').style.display = 'block';
+            const grid = document.getElementById('vipGrid');
+            grid.innerHTML = '';
+
+            // LUXURY 10-SEAT CONFIGURATION
+            const config = [1, 1, 0, 2, 2, 0, 3, 3, 0, 4, 4, 0, 5, 5]; // 0 is Aisle
+            let seatNum = 1;
+
+            for(let i=1; i<=15; i++) {
+                if(i % 3 === 2) {
+                    let a = document.createElement('div');
+                    a.className = 'aisle-space';
+                    a.innerText = 'AISLE';
+                    grid.appendChild(a);
+                } else if(seatNum <= 10) {
+                    let s = document.createElement('div');
+                    s.className = 'vip-seat';
+                    s.innerHTML = `<i class="fas fa-couch"></i> <span>${seatNum}</span>`;
+                    let currentNum = seatNum;
+                    s.onclick = function() {
+                        document.querySelectorAll('.vip-seat').forEach(x => x.classList.remove('selected'));
+                        this.classList.add('selected');
+                        bookingData.seat = currentNum;
+                    };
+                    grid.appendChild(s);
+                    seatNum++;
+                }
+            }
+            document.getElementById('seatArea').scrollIntoView({behavior: 'smooth', block: 'start'});
+        }
+
+        function generateManifest() {
+            if(!bookingData.seat) return alert("Please select a VIP seat.");
+            
+            bookingData.origin = document.getElementById('origin').value;
+            bookingData.dest = document.getElementById('destination').value;
+            bookingData.date = document.getElementById('tripDate').value;
+            bookingData.price = document.getElementById('tripClass').value;
+
+            document.getElementById('tRoute').innerText = `${bookingData.origin} to ${bookingData.dest}`;
+            document.getElementById('tSeat').innerText = "Premium Seat " + bookingData.seat;
+            document.getElementById('tDate').innerText = bookingData.date;
+            document.getElementById('tPrice').innerText = "$" + bookingData.price;
+            const uniqueCode = "RZ-" + Date.now().toString(36).toUpperCase() + "-" + Math.random().toString(36).slice(2, 8).toUpperCase();
+            bookingData.code = uniqueCode;
+            document.getElementById('tCode').innerText = "#" + uniqueCode;
+            const qrTarget = document.getElementById('qrCode');
+            qrTarget.innerHTML = '';
+            new QRCode(qrTarget, {
+                text: uniqueCode,
+                width: 120,
+                height: 120,
+                colorDark: "#0f172a",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.M
+            });
+
+            showView('ticket');
+        }
+
+        function updateCargoMath() {
+            const w = document.getElementById('cWeight').value || 1;
+            const t = document.getElementById('cType').value;
+            document.getElementById('cTotal').innerText = "$" + (w * 0.95 * t).toFixed(2);
+        }
+
+        function downloadTicketImage() {
+            const element = document.getElementById('finalTicket');
+            html2canvas(element, { scale: 3, useCORS: true }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `Raazim-VIP-Seat-${bookingData.seat}.jpeg`;
+                link.href = canvas.toDataURL("image/jpeg", 1.0);
+                link.click();
+            });
+        }
+
+        function finishWhatsApp() {
+            const msg = `*OFFICIAL RAAZIM VIP BOOKING*%0A--------------------------%0ASeat: ${bookingData.seat}%0ARoute: ${bookingData.origin} to ${bookingData.dest}%0ADate: ${bookingData.date}%0AFare: $${bookingData.price}%0A--------------------------%0A_Please confirm seat availability._`;
+            window.open(`https://wa.me/252637762739?text=${msg}`);
+        }
+
+        // --- CHATBOT (NO API) ---
+        const faq = [
+            { enQ: "Who made this site?", soQ: "Yaa sameeyay boggan?", enA: "This site was made by RT Solutions.", soA: "Boggan waxaa sameeyay RT Solutions." },
+            { enQ: "Who built this website?", soQ: "Yaa sameeyay website-ka?", enA: "This website was built by RT Solutions.", soA: "Website-kan waxaa dhisay RT Solutions." },
+            { enQ: "What is Raazim Bus?", soQ: "Waa maxay Raazim Bus?", enA: "Raazim Bus is a trusted bus transportation company based in Somaliland, providing safe and comfortable travel between major cities.", soA: "Raazim Bus waa shirkad la isku halleeyo oo gaadiidka basaska ka shaqaysa Somaliland, kana bixisa safar ammaan ah oo raaxo leh magaalooyinka waaweyn." },
+            { enQ: "Where is Raazim Bus based?", soQ: "Xaggee ayuu Raazim Bus ku yaal?", enA: "Raazim Bus is based in Somaliland and operates routes across major towns and cities.", soA: "Raazim Bus wuxuu ku salaysan yahay Somaliland, wuxuuna ka shaqeeyaa waddooyin u dhexeeya magaalooyinka waaweyn." },
+            { enQ: "What cities does Raazim Bus operate in?", soQ: "Magaalooyinkee ayuu Raazim Bus ka shaqeeyaa?", enA: "Raazim Bus operates in cities including Hargeisa, Berbera, Burao, Borama, Erigavo, and other major destinations.", soA: "Raazim Bus wuxuu ka shaqeeyaa Hargeysa, Berbera, Burco, Borama, Ceerigaabo, iyo meelo kale oo waaweyn." },
+            { enQ: "Is Raazim Bus reliable?", soQ: "Raazim Bus ma la isku hallayn karaa?", enA: "Yes, Raazim Bus is known for safety, punctuality, and professional service.", soA: "Haa, Raazim Bus waxaa lagu yaqaanaa badbaado, waqtiga oo la ilaaliyo, iyo adeeg xirfad leh." },
+            { enQ: "How long has Raazim Bus been operating?", soQ: "Muddo intee le'eg ayuu Raazim Bus shaqaynayay?", enA: "Raazim Bus has years of experience serving passengers across Somaliland.", soA: "Raazim Bus wuxuu leeyahay waayo-aragnimo sannado badan ah oo u adeegidda rakaabka Somaliland." },
+            { enQ: "Does Raazim Bus operate daily?", soQ: "Raazim Bus ma shaqeeyaa maalin kasta?", enA: "Yes, most Raazim Bus routes operate daily.", soA: "Haa, inta badan waddooyinka Raazim Bus maalin kasta ayay shaqeeyaan." },
+            { enQ: "What makes Raazim Bus different from others?", soQ: "Maxaa Raazim Bus ka duwan kuwa kale?", enA: "Comfort, safety, affordable prices, and friendly customer service.", soA: "Raaxo, badbaado, qiimo la awoodi karo, iyo adeeg macmiil oo wanaagsan." },
+            { enQ: "Does Raazim Bus follow safety standards?", soQ: "Raazim Bus ma raacaa heerarka badbaadada?", enA: "Yes, all buses are regularly inspected and driven by trained professionals.", soA: "Haa, dhammaan basaska si joogto ah ayaa loo kormeeraa, waxaana wadda darawallo tababaran." },
+            { enQ: "Is Raazim Bus suitable for families?", soQ: "Raazim Bus ma ku habboon yahay qoysaska?", enA: "Yes, families are welcome and safety is a top priority.", soA: "Haa, qoysaska waa lagu soo dhawaynayaa, badbaadaduna waa mudnaanta koowaad." },
+            { enQ: "Can tourists use Raazim Bus?", soQ: "Dalxiisayaasha ma isticmaali karaan Raazim Bus?", enA: "Yes, Raazim Bus is suitable for both locals and visitors.", soA: "Haa, Raazim Bus wuxuu ku habboon yahay dadka deegaanka iyo booqdayaasha." },
+            { enQ: "Does Raazim Bus run on public holidays?", soQ: "Raazim Bus ma shaqeeyaa maalmaha fasaxa?", enA: "Yes, schedules may vary but services usually continue.", soA: "Haa, jadwalku wuu isbedeli karaa laakiin adeeggu badanaa wuu socdaa." },
+            { enQ: "Is Raazim Bus government-owned?", soQ: "Raazim Bus ma dowlad baa leh?", enA: "No, Raazim Bus is a private transportation company.", soA: "Maya, Raazim Bus waa shirkad gaadiid oo gaar loo leeyahay." },
+            { enQ: "Does Raazim Bus provide luxury buses?", soQ: "Raazim Bus ma bixiyaa basas raaxo leh?", enA: "Yes, selected routes use modern and comfortable buses.", soA: "Haa, waddooyin gaar ah waxay isticmaalaan basas casri ah oo raaxo leh." },
+            { enQ: "Does Raazim Bus have air-conditioned buses?", soQ: "Raazim Bus ma leeyahay basas qaboojiye leh?", enA: "Yes, many buses are air-conditioned.", soA: "Haa, basas badan ayaa leh qaboojiye." },
+            { enQ: "How can I contact Raazim Bus?", soQ: "Sideen ula xiriiri karaa Raazim Bus?", enA: "You can contact Raazim Bus via phone, WhatsApp, or our website.", soA: "Waxaad Raazim Bus kala xiriiri kartaa taleefan, WhatsApp, ama boggeena." },
+            { enQ: "How do I book a ticket with Raazim Bus?", soQ: "Sideen tigidh uga ballansan karaa Raazim Bus?", enA: "You can book online, at our offices, or through authorized agents.", soA: "Waxaad ku ballansan kartaa online, xafiisyadeenna, ama wakiillo la oggolyahay." },
+            { enQ: "Can I book a ticket online?", soQ: "Tigidh ma ku ballansan karaa online?", enA: "Yes, online booking is available through our website.", soA: "Haa, ballansiga online waa laga heli karaa boggeena." },
+            { enQ: "Can I book a ticket on the same day?", soQ: "Ma ballansan karaa isla maalinta?", enA: "Yes, same-day bookings are allowed based on seat availability.", soA: "Haa, ballansiga isla maalinta waa la oggol yahay haddii kursi bannaan jiro." },
+            { enQ: "Do I need an account to book?", soQ: "Ma u baahanahay akoon si aan u ballansado?", enA: "No, but creating an account makes booking faster.", soA: "Maya, laakiin samaynta akoon waxay ka dhigtaa ballansiga mid degdeg ah." },
+            { enQ: "Can I choose my seat?", soQ: "Ma dooran karaa kursigayga?", enA: "Yes, seat selection is available during booking.", soA: "Haa, doorashada kursiga waa la heli karaa marka la ballansanayo." },
+            { enQ: "How do I receive my ticket?", soQ: "Sideen ku helayaa tigidhkayga?", enA: "You will receive an e-ticket via SMS or email.", soA: "Waxaad heli doontaa tigidh elektaroonik ah SMS ama email." },
+            { enQ: "Can I print my ticket?", soQ: "Ma daabacan karaa tigidhkayga?", enA: "Printing is optional; digital tickets are accepted.", soA: "Daabacaaddu waa ikhtiyaari; tigidhka dijitaalka ah waa la aqbalaa." },
+            { enQ: "What payment methods are accepted?", soQ: "Waa maxay hababka lacag-bixinta la aqbalo?", enA: "Cash, mobile money, and online payment methods are accepted.", soA: "Lacag caddaan, lacag mobil, iyo hababka lacag-bixinta online waa la aqbalaa." },
+            { enQ: "Can I pay using mobile money?", soQ: "Ma ku bixin karaa lacag mobil?", enA: "Yes, mobile money payments are supported.", soA: "Haa, lacag-bixinta mobilka waa la taageeraa." },
+            { enQ: "Are ticket prices fixed?", soQ: "Qiimaha tigidhadu ma go'an yihiin?", enA: "Prices depend on the route and travel date.", soA: "Qiimuhu wuxuu ku xiran yahay waddada iyo taariikhda safarka." },
+            { enQ: "Are there discounts available?", soQ: "Ma jiraan qiimo-dhimisyo?", enA: "Discounts may be available during promotions.", soA: "Qiimo-dhimisyo ayaa jiri kara xilliyada dalacsiinta." },
+            { enQ: "Can I book tickets for someone else?", soQ: "Ma ballansan karaa tigidh qof kale?", enA: "Yes, you can book for friends or family.", soA: "Haa, waxaad u ballansan kartaa saaxiib ama qoys." },
+            { enQ: "How early should I book?", soQ: "Goorma ayay fiican tahay inaan ballansado?", enA: "Booking early is recommended, especially during busy seasons.", soA: "Ballansiga hore waa lagu talinayaa, gaar ahaan xilliyada mashquulka." },
+            { enQ: "What happens if a bus is full?", soQ: "Maxaa dhacaya haddii bas buuxo?", enA: "You can choose another departure time or date.", soA: "Waxaad dooran kartaa waqti ama taariikh kale." },
+            { enQ: "Can I reserve a seat without payment?", soQ: "Ma xafidan karaa kursi anigoon bixin?", enA: "Seat reservation requires payment.", soA: "Xafidashada kursiga waxay u baahan tahay lacag-bixin." },
+            { enQ: "Can I change my booking?", soQ: "Ma beddeli karaa ballansigayga?", enA: "Yes, changes are allowed depending on ticket rules.", soA: "Haa, beddelku wuu suurtagal yahay iyadoo ku xiran shuruudaha tigidhka." },
+            { enQ: "Can I cancel my ticket?", soQ: "Ma joojin karaa tigidhkayga?", enA: "Yes, cancellation policies apply.", soA: "Haa, siyaasadda joojinta ayaa quseysa." },
+            { enQ: "Is there a cancellation fee?", soQ: "Ma jiraan kharashyo joojin ah?", enA: "Fees may apply depending on timing.", soA: "Kharash ayaa jiri kara iyadoo ku xiran waqtiga." },
+            { enQ: "How do I get a refund?", soQ: "Sideen ku helaa lacag-celin?", enA: "Refunds are processed according to our refund policy.", soA: "Lacag-celinta waxaa lagu sameeyaa siyaasadda lacag-celinta." },
+            { enQ: "How long does a refund take?", soQ: "Intee ayay qaadataa lacag-celintu?", enA: "Refunds usually take a few business days.", soA: "Lacag-celintu badanaa waxay qaadataa dhowr maalmood oo shaqo." },
+            { enQ: "Where can I see bus schedules?", soQ: "Xaggee ka arki karaa jadwalka basaska?", enA: "Schedules are available on our website and offices.", soA: "Jadwalka waxaa laga heli karaa boggeena iyo xafiisyadeenna." },
+            { enQ: "Are departure times accurate?", soQ: "Waqtiga bixitaanku ma sax yahay?", enA: "Yes, we aim to depart on time.", soA: "Haa, waxaan ku dadaalnaa inaan waqtiga bixino." },
+            { enQ: "What should I do if I miss my bus?", soQ: "Maxaan sameeyaa haddii aan bas-ka seego?", enA: "Contact customer service for assistance.", soA: "La xiriir adeegga macaamiisha si laguu caawiyo." },
+            { enQ: "How early should I arrive before departure?", soQ: "Immisa daqiiqo ayaan horay u imaadaa?", enA: "Arrive at least 30 minutes early.", soA: "Imaaw ugu yaraan 30 daqiiqo ka hor." },
+            { enQ: "How long are the journeys?", soQ: "Safarku intee ayuu qaataa?", enA: "Travel time depends on the route and traffic.", soA: "Waqtiga safarku wuxuu ku xiran yahay waddada iyo taraafikada." },
+            { enQ: "Does Raazim Bus stop for breaks?", soQ: "Raazim Bus ma joogsadaa nasasho?", enA: "Yes, rest stops are included on long routes.", soA: "Haa, nasasho ayaa lagu daraa safarrada dheer." },
+            { enQ: "Are meals included?", soQ: "Cunto ma ku jirtaa?", enA: "Meals are not included unless stated.", soA: "Cunto kuma jirto haddii aan si gaar ah loo sheegin." },
+            { enQ: "Can I bring food on the bus?", soQ: "Ma keeni karaa cunto bas-ka?", enA: "Yes, light food is allowed.", soA: "Haa, cunto fudud waa la oggol yahay." },
+            { enQ: "Is smoking allowed on the bus?", soQ: "Sigaar ma laga cabbi karaa bas-ka?", enA: "No, smoking is strictly prohibited.", soA: "Maya, sigaar cabbidda si adag ayaa loo mamnuucay." },
+            { enQ: "Is music or TV available?", soQ: "Muusig ama TV ma jiraa?", enA: "Some buses provide entertainment.", soA: "Basaska qaar ayaa leh madadaalo." },
+            { enQ: "Is Wi-Fi available?", soQ: "Wi‑Fi ma jiraa?", enA: "Wi-Fi availability depends on the bus type.", soA: "Helitaanka Wi‑Fi wuxuu ku xiran yahay nooca baska." },
+            { enQ: "Are charging ports available?", soQ: "Ma jiraan meelaha charge‑ka?", enA: "Yes, many buses have charging ports.", soA: "Haa, basas badan ayaa leh meelaha charge‑ka." },
+            { enQ: "Are buses cleaned regularly?", soQ: "Basaska ma la nadiifiyaa si joogto ah?", enA: "Yes, buses are cleaned after each trip.", soA: "Haa, basaska waa la nadiifiyaa safar kasta kadib." },
+            { enQ: "Can children travel alone?", soQ: "Carruur ma keligood safri karaan?", enA: "Children must be accompanied by an adult.", soA: "Carruurtu waa inay la socdaan qof weyn." },
+            { enQ: "Are elderly passengers assisted?", soQ: "Dadka waaweyn ma la caawiyaa?", enA: "Yes, staff provide assistance when needed.", soA: "Haa, shaqaaluhu way caawiyaan marka loo baahdo." },
+            { enQ: "Can pregnant women travel?", soQ: "Haweenka uurka leh ma safri karaan?", enA: "Yes, with medical advice if needed.", soA: "Haa, haddii loo baahdo talo caafimaad ayaa lagu talinayaa." },
+            { enQ: "Can I travel with a pet?", soQ: "Ma la safri karaa xayawaan?", enA: "Pets are generally not allowed.", soA: "Xayawaanka badanaa lama oggola." },
+            { enQ: "Is night travel safe?", soQ: "Safarka habeenkii ma ammaan baa?", enA: "Yes, safety measures are in place.", soA: "Haa, tallaabooyin badbaado ayaa la qaaday." },
+            { enQ: "What happens during delays?", soQ: "Maxaa dhacaya marka dib-u-dhac jiro?", enA: "Passengers are informed as soon as possible.", soA: "Rakaabka waxaa loo sheegaa sida ugu dhakhsaha badan." },
+            { enQ: "Can I track my bus?", soQ: "Ma raaci karaa bas-kayga (tracking)?", enA: "Yes, live tracking is available on select routes.", soA: "Haa, la socod toos ah ayaa laga heli karaa waddooyin gaar ah." },
+            { enQ: "How much luggage can I bring?", soQ: "Immisa shandad ayaan keeni karaa?", enA: "One standard bag is included.", soA: "Hal shandad oo caadi ah waa ku jirtaa." },
+            { enQ: "Is extra luggage allowed?", soQ: "Shandad dheeri ah ma la oggol yahay?", enA: "Yes, extra fees may apply.", soA: "Haa, kharash dheeri ah ayaa jiri kara." },
+            { enQ: "Can I bring fragile items?", soQ: "Ma keeni karaa alaab jilicsan/jaban?", enA: "Yes, but at your own risk.", soA: "Haa, laakiin khatarteeda adiga ayaa qaadaya." },
+            { enQ: "Are valuables safe on the bus?", soQ: "Alaabta qiimaha leh ma ammaan baa?", enA: "Keep valuables with you at all times.", soA: "Alaabta qiimaha leh mar walba adiga ha kuu jirto." },
+            { enQ: "Can I transport cargo?", soQ: "Ma rari karaa xamuul?", enA: "Yes, cargo services are available.", soA: "Haa, adeegga xamuulka waa la heli karaa." },
+            { enQ: "Is lost luggage covered?", soQ: "Haddii shandad lunto maxaa la sameeyaa?", enA: "Please report immediately for assistance.", soA: "Fadlan isla markiiba soo sheeg si laguugu caawiyo." },
+            { enQ: "What items are not allowed?", soQ: "Maxay yihiin waxyaabaha aan la oggolayn?", enA: "Illegal, dangerous, or flammable items.", soA: "Waxyaabo sharci-darro ah, khatar ah, ama guban kara." },
+            { enQ: "Can I bring electronics?", soQ: "Ma keeni karaa qalab elektaroonik ah?", enA: "Yes, passengers are responsible for them.", soA: "Haa, rakaabku wuxuu ka mas'uul yahay qalabkiisa." },
+            { enQ: "Can I carry business goods?", soQ: "Ma qaadi karaa alaab ganacsi?", enA: "Yes, subject to cargo rules.", soA: "Haa, iyadoo lagu saleynayo xeerarka xamuulka." },
+            { enQ: "Does luggage get tagged?", soQ: "Shandadaha ma la calaamadiyaa?", enA: "Yes, luggage identification is used.", soA: "Haa, calaamadeyn shandad ayaa la isticmaalaa." },
+            { enQ: "Who is responsible for luggage?", soQ: "Yaa mas'uul ka ah shandadaha?", enA: "Passengers are responsible for personal items.", soA: "Rakaabku ayaa mas'uul ka ah alaabtooda." },
+            { enQ: "Is luggage insured?", soQ: "Shandaduhu ma caymis bay leeyihiin?", enA: "Insurance depends on the item and policy.", soA: "Caymisku wuxuu ku xiran yahay alaabta iyo siyaasadda." },
+            { enQ: "Can I claim damaged luggage?", soQ: "Ma sheegan karaa shandad dhaawacantay?", enA: "Report damage immediately after arrival.", soA: "Dhibka isla markiiba sheeg markaad timaado." },
+            { enQ: "Can I send luggage without traveling?", soQ: "Ma diri karaa shandad anigoon safar gelin?", enA: "Yes, through cargo service.", soA: "Haa, adigoo adeegsanaya adeegga xamuulka." },
+            { enQ: "How do I track cargo?", soQ: "Sideen u raaci karaa xamuulkeyga?", enA: "Contact customer support for updates.", soA: "La xiriir taageerada macaamiisha si aad u hesho warbixin." },
+            { enQ: "How do I contact customer support?", soQ: "Sideen ula xiriiri karaa taageerada macaamiisha?", enA: "Via phone, WhatsApp, or our website.", soA: "Taleefan, WhatsApp, ama boggeena." },
+            { enQ: "What are support working hours?", soQ: "Waa maxay saacadaha shaqada ee taageerada?", enA: "Support is available daily during business hours.", soA: "Taageeradu waxay diyaar tahay maalin kasta saacadaha shaqada." },
+            { enQ: "Can I speak to a human agent?", soQ: "Ma la hadli karaa qof shaqaale ah?", enA: "Yes, request a live agent anytime.", soA: "Haa, codso qof shaqaale ah wakhti kasta." },
+            { enQ: "How do I create an account?", soQ: "Sideen u samaystaa akoon?", enA: "Click “Sign Up” on our website.", soA: "Guji “Sign Up” boggeena." },
+            { enQ: "What are the benefits of an account?", soQ: "Maxaa faa'iido ah akoonku leeyahay?", enA: "Faster booking and booking history.", soA: "Ballansiyo degdeg ah iyo taariikhda ballansiga." },
+            { enQ: "Can I reset my password?", soQ: "Ma beddeli karaa erayga sirta?", enA: "Yes, use the “Forgot Password” option.", soA: "Haa, isticmaal “Forgot Password”." },
+            { enQ: "Is my personal data safe?", soQ: "Xogtayda ma ammaan baa?", enA: "Yes, we protect your privacy.", soA: "Haa, waxaan ilaalinaa asturnaantaada." },
+            { enQ: "Does Raazim Bus have social media?", soQ: "Raazim Bus ma leeyahay baraha bulshada?", enA: "Yes, follow us for updates and offers.", soA: "Haa, nagu soo biir si aad u hesho warar iyo dalabyo." },
+            { enQ: "How do I give feedback?", soQ: "Sideen u bixiyaa fikrad/feedback?", enA: "Through our website or customer service.", soA: "Boggeena ama adeegga macaamiisha." },
+            { enQ: "Can I file a complaint?", soQ: "Ma gudbin karaa cabasho?", enA: "Yes, complaints are taken seriously.", soA: "Haa, cabashooyinka si dhab ah ayaa loo qaataa." },
+            { enQ: "How long does complaint resolution take?", soQ: "Intee ayay qaadataa xalinta cabashada?", enA: "Usually within a few working days.", soA: "Badanaa dhowr maalmood oo shaqo ah." },
+            { enQ: "Can I rate my trip?", soQ: "Ma qiimeyn karaa safarkayga?", enA: "Yes, after your journey.", soA: "Haa, kadib safarkaaga." },
+            { enQ: "Are promotions announced online?", soQ: "Dalacsiinta ma online baa lagu shaaciyaa?", enA: "Yes, check our website and social media.", soA: "Haa, ka eeg boggeena iyo baraha bulshada." },
+            { enQ: "Does Raazim Bus offer loyalty rewards?", soQ: "Raazim Bus ma leeyahay abaalmarin daacadnimo?", enA: "Loyalty programs may be available.", soA: "Barnaamijyo daacadnimo ayaa jiri kara." },
+            { enQ: "Can businesses partner with Raazim Bus?", soQ: "Ganacsiyo ma la shaqayn karaan Raazim Bus?", enA: "Yes, contact us for partnerships.", soA: "Haa, nala soo xiriir iskaashi." },
+            { enQ: "Does Raazim Bus hire drivers?", soQ: "Raazim Bus ma qaataa darawallo?", enA: "Yes, job openings are announced publicly.", soA: "Haa, shaqooyinka waa la shaaciyeyaa." },
+            { enQ: "Can I advertise on Raazim buses?", soQ: "Ma ku xayaysiin karaa basaska Raazim?", enA: "Yes, advertising options are available.", soA: "Haa, xulashooyin xayeysiis waa la heli karaa." },
+            { enQ: "Does Raazim Bus support events?", soQ: "Raazim Bus ma taageeraa dhacdooyin?", enA: "Yes, charter services are available.", soA: "Haa, adeegga kirada (charter) waa la heli karaa." },
+            { enQ: "Can I rent a bus?", soQ: "Ma kiraysan karaa bas?", enA: "Yes, private hire services are offered.", soA: "Haa, adeegga kirada gaarka ah waa la bixiyaa." },
+            { enQ: "How do I book a private bus?", soQ: "Sideen u ballansan karaa bas gaar ah?", enA: "Contact customer service directly.", soA: "Si toos ah ula xiriir adeegga macaamiisha." },
+            { enQ: "Are charter prices negotiable?", soQ: "Qiimaha charter ma la gorgortami karaa?", enA: "Prices depend on distance and duration.", soA: "Qiimuhu wuxuu ku xiran yahay masaafada iyo muddada." },
+            { enQ: "What happens if I lose my ticket?", soQ: "Maxaa dhacaya haddii aan tigidhkayga waayo?", enA: "Show your booking confirmation or ID.", soA: "Muuji caddeynta ballansiga ama aqoonsiga." },
+            { enQ: "Can I travel without ID?", soQ: "Ma safri karaa anigoon aqoonsi wadan?", enA: "ID may be required for verification.", soA: "Aqoonsi ayaa loo baahan karaa xaqiijin ahaan." },
+            { enQ: "Are children charged full price?", soQ: "Carruurta ma qaataan qiimo buuxa?", enA: "Child fares may apply depending on age.", soA: "Qiimo carruur ayaa jiri kara iyadoo ku xiran da'da." },
+            { enQ: "Does Raazim Bus offer student discounts?", soQ: "Raazim Bus ma leeyahay qiimo-dhimis arday?", enA: "Student discounts may be available.", soA: "Qiimo-dhimis arday ayaa jiri kara." },
+            { enQ: "Can I suggest new routes?", soQ: "Ma soo jeedin karaa waddooyin cusub?", enA: "Yes, customer suggestions are welcome.", soA: "Haa, talooyinka macaamiisha waa la soo dhaweynayaa." },
+            { enQ: "Does Raazim Bus operate at night?", soQ: "Raazim Bus ma shaqeeyaa habeenkii?", enA: "Yes, night routes are available on some routes.", soA: "Haa, qaar ka mid ah waddooyinka waxaa jira safarro habeenkii." },
+            { enQ: "What should I do in an emergency?", soQ: "Maxaan sameeyaa xaalad degdeg ah?", enA: "Inform the driver or contact support immediately.", soA: "Wargeli darawalka ama isla markiiba la xiriir taageerada." },
+            { enQ: "Can I get travel confirmation for work?", soQ: "Ma heli karaa caddeyn safar shaqo?", enA: "Yes, booking receipts are provided.", soA: "Haa, rasiid/receipt ballansiga waa la bixiyaa." },
+            { enQ: "Why should I choose Raazim Bus?", soQ: "Maxaa Raazim Bus loogu doortaa?", enA: "Because Raazim Bus offers safe, comfortable, and reliable travel across Somaliland.", soA: "Sababtoo ah Raazim Bus wuxuu bixiya safar ammaan ah, raaxo leh, oo la isku halleyn karo gudaha Somaliland." }
+        ];
+
+        const quickQuestions = {
+            en: ["Price", "Routes", "Schedule", "Booking", "Cargo"],
+            so: ["Qiimaha", "Meelaha", "Jadwal", "Ballan", "Xamuul"]
+        };
+
+        let lastUserLang = (navigator.language || "")
+            .toLowerCase()
+            .startsWith("so") ? "so" : "en";
+
+        function toggleChatbot(forceClose) {
+            const bot = document.getElementById('chatbot');
+            if (forceClose === false) {
+                bot.classList.remove('active');
+                return;
+            }
+            if (forceClose === true) {
+                bot.classList.add('active');
+                return;
+            }
+            bot.classList.toggle('active');
+        }
+
+        function detectLang(text) {
+            const lower = text.toLowerCase();
+            const words = lower.match(/[a-zA-Z']+/g) || [];
+            const somaliWords = new Set([
+                "iyo", "aad", "xagee", "goorma", "maxaa", "maxaad", "sidee", "fadlan",
+                "qiimo", "qiimaha", "kursi", "xamuul", "jadwal", "ballan", "tigidh",
+                "hargeysa", "borama", "burco", "safarka", "salaan", "mahadsanid"
+            ]);
+            const englishWords = new Set([
+                "price", "prices", "route", "routes", "schedule", "booking", "cargo",
+                "luggage", "support", "ticket", "refund", "seat", "bus", "travel"
+            ]);
+            let so = 0;
+            let en = 0;
+            for (const w of words) {
+                if (somaliWords.has(w)) so += 1;
+                if (englishWords.has(w)) en += 1;
+            }
+            if (so === 0 && en === 0) return lastUserLang || "en";
+            if (so > en) return "so";
+            if (en > so) return "en";
+            return lastUserLang || "en";
+        }
+
+        function bestMatch(text) {
+            const lower = text.toLowerCase();
+            const tokens = lower.split(/[^a-zA-Z0-9\u0600-\u06FF]+/).filter(t => t.length > 2);
+            let best = { score: 0, item: null };
+            for (const item of faq) {
+                const qEn = item.enQ.toLowerCase();
+                const qSo = item.soQ.toLowerCase();
+                let score = 0;
+                if (lower.includes(qEn) || lower.includes(qSo)) score += 6;
+                for (const t of tokens) {
+                    if (qEn.includes(t) || qSo.includes(t)) score += 1;
+                }
+                if (score > best.score) best = { score, item };
+            }
+            return best.score >= 2 ? best.item : null;
+        }
+
+        function addChatMessage(text, fromUser) {
+            const body = document.getElementById('chatBody');
+            const msg = document.createElement('div');
+            msg.className = 'chatbot-msg' + (fromUser ? ' user' : '');
+            const bubble = document.createElement('div');
+            bubble.className = 'chatbot-bubble';
+            bubble.innerText = text;
+            msg.appendChild(bubble);
+            body.appendChild(msg);
+            body.scrollTop = body.scrollHeight;
+        }
+
+        function sendChat() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            if (!text) return;
+            addChatMessage(text, true);
+            input.value = '';
+
+            const lang = detectLang(text);
+            lastUserLang = lang;
+            renderQuickChips(lang);
+            const match = bestMatch(text);
+            if (match) {
+                addChatMessage(lang === "so" ? match.soA : match.enA, false);
+            } else {
+                const fallbackEn = "I can help with prices, routes, schedule, booking, cargo, luggage, and support.";
+                const fallbackSo = "Waxaan kaa caawin karaa qiimaha, meelaha, jadwalka, ballansiga, xamuulka, shandadaha, iyo taageerada.";
+                addChatMessage(lang === "so" ? fallbackSo : fallbackEn, false);
+            }
+        }
+
+        function renderQuickChips(lang) {
+            const quick = document.getElementById('chatQuick');
+            quick.innerHTML = '';
+            const list = quickQuestions[lang] || quickQuestions.en;
+            list.forEach(q => {
+                const chip = document.createElement('button');
+                chip.className = 'chatbot-chip';
+                chip.innerText = q;
+                chip.onclick = () => {
+                    document.getElementById('chatInput').value = q;
+                    sendChat();
+                };
+                quick.appendChild(chip);
+            });
+        }
+
+        function initChatbot() {
+            renderQuickChips(lastUserLang);
+            const welcomeEn = "Hi! Ask me about prices, routes, schedule, booking, or cargo.";
+            const welcomeSo = "Salaan! Weydii qiimaha, meelaha, jadwalka, ballansiga, ama xamuulka.";
+            addChatMessage(lastUserLang === "so" ? welcomeSo : welcomeEn, false);
+        }
+
+        // Initialize today's date
+        document.getElementById('tripDate').valueAsDate = new Date();
+        updateCargoMath();
+        initChatbot();
+    </script>
+</body>
+</html>
