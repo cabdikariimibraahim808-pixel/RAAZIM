@@ -66,18 +66,7 @@
             border-bottom: 28px solid transparent;
             border-left: 22px solid var(--sky);
         }
-        .brand-swash::before {
-            content: '';
-            position: absolute;
-            right: 6px;
-            top: 50%;
-            width: 14px;
-            height: 14px;
-            background: #5bbde5;
-            transform: translateY(-50%) rotate(45deg);
-            box-shadow: 0 0 0 6px var(--sky);
-            opacity: 0.9;
-        }
+        .brand-swash::before { display: none; }
         .logo-box { width: 48px; height: 48px; background: linear-gradient(135deg, var(--sky), #60a5fa); border-radius: 14px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(135, 206, 235, 0.4); overflow: hidden; }
         .logo-img { width: 100%; height: 100%; object-fit: contain; display: block; }
         .logo-fallback { display: none; width: 100%; height: 100%; align-items: center; justify-content: center; }
@@ -164,12 +153,19 @@
         .footer-credit strong { display: inline-block; font-size: 1.1rem; letter-spacing: 2px; color: white; padding: 6px 14px; border: 1px solid rgba(255,255,255,0.25); border-radius: 999px; }
 
         /* --- CHATBOT --- */
-        .chatbot-launcher {
+        .chatbot-launcher-wrap {
             position: fixed; right: 24px; bottom: 24px; z-index: 2500;
+            display: flex; flex-direction: column; align-items: center; gap: 6px;
+        }
+        .chatbot-launcher {
             width: 60px; height: 60px; border-radius: 50%;
             border: none; cursor: pointer; background: var(--navy); color: white;
             box-shadow: 0 15px 30px rgba(15,23,42,0.25); transition: var(--transition);
             display: flex; align-items: center; justify-content: center;
+        }
+        .chatbot-label {
+            font-size: 0.6rem; letter-spacing: 2px; text-transform: uppercase; font-weight: 800;
+            color: rgba(15,23,42,0.75);
         }
         .chatbot-launcher:hover { transform: translateY(-4px); background: var(--sky); color: var(--navy); }
         .chatbot {
@@ -320,6 +316,7 @@
                     <select id="tripClass">
                         <option value="6" selected>Standard ($6)</option>
                     </select>
+                    <small id="routePriceDisplay" style="font-weight:700;color:#64748b;">Current fare: $6</small>
                 </div>
                 <button class="btn btn-primary" onclick="initVIPSeats()">Check Seats</button>
             </div>
@@ -480,9 +477,12 @@
         </div>
     </footer>
 
-    <button class="chatbot-launcher" aria-label="Chatbot" onclick="toggleChatbot()">
-        <i class="fas fa-comments"></i>
-    </button>
+    <div class="chatbot-launcher-wrap">
+        <button class="chatbot-launcher" aria-label="Chatbot" onclick="toggleChatbot()">
+            <i class="fas fa-comments"></i>
+        </button>
+        <span class="chatbot-label">Chatbot</span>
+    </div>
     <div id="chatbot" class="chatbot" aria-live="polite">
         <div class="chatbot-header">
             <div class="chatbot-title">Raazim Help</div>
@@ -522,7 +522,32 @@
 
         function autoRoute(city) {
             document.getElementById('destination').value = city;
+            updateRoutePrice();
             document.getElementById('engine').scrollIntoView({behavior: 'smooth'});
+        }
+
+        function getRoutePrice(origin, dest) {
+            const o = (origin || "").toLowerCase();
+            const d = (dest || "").toLowerCase();
+            const isBorama = o.includes("borama") || d.includes("borama");
+            const isBurco = o.includes("burco") || d.includes("burco");
+            if (isBorama && isBurco) return 12;
+            return 6;
+        }
+
+        function updateRoutePrice() {
+            const origin = document.getElementById('origin').value;
+            const dest = document.getElementById('destination').value;
+            const price = getRoutePrice(origin, dest);
+            const tripClass = document.getElementById('tripClass');
+            const label = price === 12 ? "Borama ↔ Burco ($12)" : "Standard ($6)";
+            tripClass.value = price;
+            if (tripClass.options.length) {
+                tripClass.options[0].value = price;
+                tripClass.options[0].textContent = label;
+            }
+            const display = document.getElementById('routePriceDisplay');
+            if (display) display.textContent = `Current fare: $${price}`;
         }
 
         function initVIPSeats() {
@@ -562,6 +587,7 @@
         function generateManifest() {
             if(!bookingData.seat) return alert("Please select a VIP seat.");
             
+            updateRoutePrice();
             bookingData.origin = document.getElementById('origin').value;
             bookingData.dest = document.getElementById('destination').value;
             bookingData.date = document.getElementById('tripDate').value;
@@ -615,7 +641,7 @@
             { enQ: "Who built this website?", soQ: "Yaa sameeyay website-ka?", enA: "This website was built by RT Solutions.", soA: "Website-kan waxaa dhisay RT Solutions." },
             { enQ: "What is Raazim Bus?", soQ: "Waa maxay Raazim Bus?", enA: "Raazim Bus is a trusted bus transportation company based in Somaliland, providing safe and comfortable travel between major cities.", soA: "Raazim Bus waa shirkad la isku halleeyo oo gaadiidka basaska ka shaqaysa Somaliland, kana bixisa safar ammaan ah oo raaxo leh magaalooyinka waaweyn." },
             { enQ: "Where is Raazim Bus based?", soQ: "Xaggee ayuu Raazim Bus ku yaal?", enA: "Raazim Bus is based in Somaliland and operates routes across major towns and cities.", soA: "Raazim Bus wuxuu ku salaysan yahay Somaliland, wuxuuna ka shaqeeyaa waddooyin u dhexeeya magaalooyinka waaweyn." },
-            { enQ: "What cities does Raazim Bus operate in?", soQ: "Magaalooyinkee ayuu Raazim Bus ka shaqeeyaa?", enA: "Raazim Bus operates in cities including Hargeisa, Berbera, Burao, Borama, Erigavo, and other major destinations.", soA: "Raazim Bus wuxuu ka shaqeeyaa Hargeysa, Berbera, Burco, Borama, Ceerigaabo, iyo meelo kale oo waaweyn." },
+            { enQ: "What cities does Raazim Bus operate in?", soQ: "Magaalooyinkee ayuu Raazim Bus ka shaqeeyaa?", enA: "We operate routes between Borama, Hargeisa, and Burco.", soA: "Waxaan ka shaqeynaa waddooyinka u dhexeeya Borama, Hargeysa, iyo Burco." },
             { enQ: "Is Raazim Bus reliable?", soQ: "Raazim Bus ma la isku hallayn karaa?", enA: "Yes, Raazim Bus is known for safety, punctuality, and professional service.", soA: "Haa, Raazim Bus waxaa lagu yaqaanaa badbaado, waqtiga oo la ilaaliyo, iyo adeeg xirfad leh." },
             { enQ: "How long has Raazim Bus been operating?", soQ: "Muddo intee le'eg ayuu Raazim Bus shaqaynayay?", enA: "Raazim Bus has years of experience serving passengers across Somaliland.", soA: "Raazim Bus wuxuu leeyahay waayo-aragnimo sannado badan ah oo u adeegidda rakaabka Somaliland." },
             { enQ: "Does Raazim Bus operate daily?", soQ: "Raazim Bus ma shaqeeyaa maalin kasta?", enA: "Yes, most Raazim Bus routes operate daily.", soA: "Haa, inta badan waddooyinka Raazim Bus maalin kasta ayay shaqeeyaan." },
@@ -628,8 +654,8 @@
             { enQ: "Does Raazim Bus provide luxury buses?", soQ: "Raazim Bus ma bixiyaa basas raaxo leh?", enA: "Yes, selected routes use modern and comfortable buses.", soA: "Haa, waddooyin gaar ah waxay isticmaalaan basas casri ah oo raaxo leh." },
             { enQ: "Does Raazim Bus have air-conditioned buses?", soQ: "Raazim Bus ma leeyahay basas qaboojiye leh?", enA: "Yes, many buses are air-conditioned.", soA: "Haa, basas badan ayaa leh qaboojiye." },
             { enQ: "How can I contact Raazim Bus?", soQ: "Sideen ula xiriiri karaa Raazim Bus?", enA: "You can contact Raazim Bus via phone, WhatsApp, or our website.", soA: "Waxaad Raazim Bus kala xiriiri kartaa taleefan, WhatsApp, ama boggeena." },
-            { enQ: "How do I book a ticket with Raazim Bus?", soQ: "Sideen tigidh uga ballansan karaa Raazim Bus?", enA: "You can book online, at our offices, or through authorized agents.", soA: "Waxaad ku ballansan kartaa online, xafiisyadeenna, ama wakiillo la oggolyahay." },
-            { enQ: "Can I book a ticket online?", soQ: "Tigidh ma ku ballansan karaa online?", enA: "Yes, online booking is available through our website.", soA: "Haa, ballansiga online waa laga heli karaa boggeena." },
+            { enQ: "How do I book a ticket with Raazim Bus?", soQ: "Sideen tigidh uga ballansan karaa Raazim Bus?", enA: "Booking is done on our website.", soA: "Ballansiga waxaa lagu sameeyaa boggeena." },
+            { enQ: "Can I book a ticket online?", soQ: "Tigidh ma ku ballansan karaa online?", enA: "Yes, booking is available on our website.", soA: "Haa, ballansiga wuxuu ka socdaa boggeena." },
             { enQ: "Can I book a ticket on the same day?", soQ: "Ma ballansan karaa isla maalinta?", enA: "Yes, same-day bookings are allowed based on seat availability.", soA: "Haa, ballansiga isla maalinta waa la oggol yahay haddii kursi bannaan jiro." },
             { enQ: "Do I need an account to book?", soQ: "Ma u baahanahay akoon si aan u ballansado?", enA: "No, but creating an account makes booking faster.", soA: "Maya, laakiin samaynta akoon waxay ka dhigtaa ballansiga mid degdeg ah." },
             { enQ: "Can I choose my seat?", soQ: "Ma dooran karaa kursigayga?", enA: "Yes, seat selection is available during booking.", soA: "Haa, doorashada kursiga waa la heli karaa marka la ballansanayo." },
@@ -637,7 +663,8 @@
             { enQ: "Can I print my ticket?", soQ: "Ma daabacan karaa tigidhkayga?", enA: "Printing is optional; digital tickets are accepted.", soA: "Daabacaaddu waa ikhtiyaari; tigidhka dijitaalka ah waa la aqbalaa." },
             { enQ: "What payment methods are accepted?", soQ: "Waa maxay hababka lacag-bixinta la aqbalo?", enA: "Cash, mobile money, and online payment methods are accepted.", soA: "Lacag caddaan, lacag mobil, iyo hababka lacag-bixinta online waa la aqbalaa." },
             { enQ: "Can I pay using mobile money?", soQ: "Ma ku bixin karaa lacag mobil?", enA: "Yes, mobile money payments are supported.", soA: "Haa, lacag-bixinta mobilka waa la taageeraa." },
-            { enQ: "Are ticket prices fixed?", soQ: "Qiimaha tigidhadu ma go'an yihiin?", enA: "Prices depend on the route and travel date.", soA: "Qiimuhu wuxuu ku xiran yahay waddada iyo taariikhda safarka." },
+            { enQ: "Are ticket prices fixed?", soQ: "Qiimaha tigidhadu ma go'an yihiin?", enA: "Standard ticket price is $6. Borama ↔ Burco is $12.", soA: "Qiimaha tigidhka caadiga ah waa $6. Borama ↔ Burco waa $12." },
+            { enQ: "How much is Borama to Burco?", soQ: "Qiimaha Borama ilaa Burco waa imisa?", enA: "Borama to Burco is $12.", soA: "Borama ilaa Burco waa $12." },
             { enQ: "Are there discounts available?", soQ: "Ma jiraan qiimo-dhimisyo?", enA: "Discounts may be available during promotions.", soA: "Qiimo-dhimisyo ayaa jiri kara xilliyada dalacsiinta." },
             { enQ: "Can I book tickets for someone else?", soQ: "Ma ballansan karaa tigidh qof kale?", enA: "Yes, you can book for friends or family.", soA: "Haa, waxaad u ballansan kartaa saaxiib ama qoys." },
             { enQ: "How early should I book?", soQ: "Goorma ayay fiican tahay inaan ballansado?", enA: "Booking early is recommended, especially during busy seasons.", soA: "Ballansiga hore waa lagu talinayaa, gaar ahaan xilliyada mashquulka." },
@@ -648,7 +675,7 @@
             { enQ: "Is there a cancellation fee?", soQ: "Ma jiraan kharashyo joojin ah?", enA: "Fees may apply depending on timing.", soA: "Kharash ayaa jiri kara iyadoo ku xiran waqtiga." },
             { enQ: "How do I get a refund?", soQ: "Sideen ku helaa lacag-celin?", enA: "Refunds are processed according to our refund policy.", soA: "Lacag-celinta waxaa lagu sameeyaa siyaasadda lacag-celinta." },
             { enQ: "How long does a refund take?", soQ: "Intee ayay qaadataa lacag-celintu?", enA: "Refunds usually take a few business days.", soA: "Lacag-celintu badanaa waxay qaadataa dhowr maalmood oo shaqo." },
-            { enQ: "Where can I see bus schedules?", soQ: "Xaggee ka arki karaa jadwalka basaska?", enA: "Schedules are available on our website and offices.", soA: "Jadwalka waxaa laga heli karaa boggeena iyo xafiisyadeenna." },
+            { enQ: "Where can I see bus schedules?", soQ: "Xaggee ka arki karaa jadwalka basaska?", enA: "Our daily schedule runs from 6:00 AM to 8:00 PM.", soA: "Jadwalkeennu maalin kasta wuxuu socdaa 6:00 subaxnimo ilaa 8:00 fiidnimo." },
             { enQ: "Are departure times accurate?", soQ: "Waqtiga bixitaanku ma sax yahay?", enA: "Yes, we aim to depart on time.", soA: "Haa, waxaan ku dadaalnaa inaan waqtiga bixino." },
             { enQ: "What should I do if I miss my bus?", soQ: "Maxaan sameeyaa haddii aan bas-ka seego?", enA: "Contact customer service for assistance.", soA: "La xiriir adeegga macaamiisha si laguu caawiyo." },
             { enQ: "How early should I arrive before departure?", soQ: "Immisa daqiiqo ayaan horay u imaadaa?", enA: "Arrive at least 30 minutes early.", soA: "Imaaw ugu yaraan 30 daqiiqo ka hor." },
@@ -672,7 +699,7 @@
             { enQ: "Is extra luggage allowed?", soQ: "Shandad dheeri ah ma la oggol yahay?", enA: "Yes, extra fees may apply.", soA: "Haa, kharash dheeri ah ayaa jiri kara." },
             { enQ: "Can I bring fragile items?", soQ: "Ma keeni karaa alaab jilicsan/jaban?", enA: "Yes, but at your own risk.", soA: "Haa, laakiin khatarteeda adiga ayaa qaadaya." },
             { enQ: "Are valuables safe on the bus?", soQ: "Alaabta qiimaha leh ma ammaan baa?", enA: "Keep valuables with you at all times.", soA: "Alaabta qiimaha leh mar walba adiga ha kuu jirto." },
-            { enQ: "Can I transport cargo?", soQ: "Ma rari karaa xamuul?", enA: "Yes, cargo services are available.", soA: "Haa, adeegga xamuulka waa la heli karaa." },
+            { enQ: "Can I transport cargo?", soQ: "Ma rari karaa xamuul?", enA: "Yes. Cargo is calculated per kilogram (per kg).", soA: "Haa. Xamuulka waxaa lagu xisaabiyaa kiiloogaraam (kg) kasta." },
             { enQ: "Is lost luggage covered?", soQ: "Haddii shandad lunto maxaa la sameeyaa?", enA: "Please report immediately for assistance.", soA: "Fadlan isla markiiba soo sheeg si laguugu caawiyo." },
             { enQ: "What items are not allowed?", soQ: "Maxay yihiin waxyaabaha aan la oggolayn?", enA: "Illegal, dangerous, or flammable items.", soA: "Waxyaabo sharci-darro ah, khatar ah, ama guban kara." },
             { enQ: "Can I bring electronics?", soQ: "Ma keeni karaa qalab elektaroonik ah?", enA: "Yes, passengers are responsible for them.", soA: "Haa, rakaabku wuxuu ka mas'uul yahay qalabkiisa." },
@@ -761,21 +788,59 @@
             return lastUserLang || "en";
         }
 
+        function expandTokens(tokens) {
+            const expanded = [];
+            for (const t of tokens) {
+                expanded.push(t);
+                if (t.length > 4 && t.endsWith("ing")) expanded.push(t.slice(0, -3));
+                if (t.length > 3 && t.endsWith("es")) expanded.push(t.slice(0, -2));
+                if (t.length > 3 && t.endsWith("s")) expanded.push(t.slice(0, -1));
+                if (t.length > 3 && (t.endsWith("ga") || t.endsWith("ka"))) expanded.push(t.slice(0, -2));
+            }
+            return Array.from(new Set(expanded));
+        }
+
+        function keywordFallback(text) {
+            const lower = text.toLowerCase();
+            const keywordGroups = [
+                { keys: ["price", "prices", "fare", "cost", "qiimo", "qiimaha"], pick: ["price", "prices", "qiimo"] },
+                { keys: ["cargo", "xamuul"], pick: ["cargo", "xamuul"] },
+                { keys: ["book", "booking", "reserve", "ticket", "ballan", "tigidh"], pick: ["book", "ticket", "ballan", "tigidh"] },
+                { keys: ["schedule", "time", "times", "jadwal", "saacad"], pick: ["schedule", "jadwal"] },
+                { keys: ["route", "routes", "destination", "meelaha", "waddo", "waddooyin"], pick: ["route", "routes", "meelaha", "waddo"] }
+            ];
+
+            for (const group of keywordGroups) {
+                if (group.keys.some(k => lower.includes(k))) {
+                    return faq.find(item => {
+                        const qEn = item.enQ.toLowerCase();
+                        const qSo = item.soQ.toLowerCase();
+                        return group.pick.some(k => qEn.includes(k) || qSo.includes(k));
+                    }) || null;
+                }
+            }
+            return null;
+        }
+
         function bestMatch(text) {
             const lower = text.toLowerCase();
-            const tokens = lower.split(/[^a-zA-Z0-9\u0600-\u06FF]+/).filter(t => t.length > 2);
+            const rawTokens = lower.split(/[^a-zA-Z0-9\u0600-\u06FF]+/).filter(t => t.length > 2);
+            const tokens = expandTokens(rawTokens);
             let best = { score: 0, item: null };
             for (const item of faq) {
                 const qEn = item.enQ.toLowerCase();
                 const qSo = item.soQ.toLowerCase();
                 let score = 0;
-                if (lower.includes(qEn) || lower.includes(qSo)) score += 6;
+                if (lower.includes(qEn) || lower.includes(qSo)) score += 8;
                 for (const t of tokens) {
-                    if (qEn.includes(t) || qSo.includes(t)) score += 1;
+                    if (qEn.includes(t) || qSo.includes(t)) score += t.length >= 5 ? 2 : 1;
                 }
                 if (score > best.score) best = { score, item };
             }
-            return best.score >= 2 ? best.item : null;
+            if (best.score >= 2) return best.item;
+            const fallback = keywordFallback(text);
+            if (fallback) return fallback;
+            return best.score >= 1 ? best.item : null;
         }
 
         function addChatMessage(text, fromUser) {
@@ -835,6 +900,9 @@
 
         // Initialize today's date
         document.getElementById('tripDate').valueAsDate = new Date();
+        document.getElementById('origin').addEventListener('change', updateRoutePrice);
+        document.getElementById('destination').addEventListener('change', updateRoutePrice);
+        updateRoutePrice();
         updateCargoMath();
         initChatbot();
     </script>
