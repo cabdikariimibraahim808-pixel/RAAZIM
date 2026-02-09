@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link rel="icon" href="favicon.png.png" type="image/png">
     <link rel="apple-touch-icon" href="favicon.png.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#0f172a">
 
     <style>
         :root {
@@ -910,5 +912,72 @@
         updateCargoMath();
         initChatbot();
     </script>
+
+        <!-- PWA: Install + Download buttons and Service Worker registration -->
+        <button id="installBtn" style="display:none; position:fixed; left:24px; bottom:24px; z-index:2600; padding:10px 14px; border-radius:12px; background:#0f172a; color:#fff; border:none;">Install App</button>
+        <button id="downloadBtn" style="position:fixed; left:24px; bottom:80px; z-index:2600; padding:10px 14px; border-radius:12px; background:#f59e0b; color:#0f172a; border:none;">Download / Install</button>
+
+        <!-- Instructions modal shown when native install prompt is unavailable -->
+        <div id="installInstr" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); align-items:center; justify-content:center; z-index:2700;">
+          <div style="background:white; color:#0f172a; max-width:520px; width:92%; padding:20px; border-radius:12px; box-shadow:0 10px 40px rgba(0,0,0,0.25);">
+            <h3 style="margin-bottom:8px;">Install Raazim Premium</h3>
+            <p style="margin-bottom:12px; color:#475569;">Your browser does not offer an automatic install prompt. Follow the steps below for your device:</p>
+            <ul style="color:#475569; margin-bottom:12px;">
+              <li><strong>Android / Chrome:</strong> Open the browser menu (⋮) → <em>Add to Home screen</em>.</li>
+              <li><strong>Desktop Chrome / Edge:</strong> Look for the install icon in the address bar (a + or computer icon) or open the menu → <em>Install</em>.</li>
+              <li><strong>iOS / Safari:</strong> Tap the Share button → <em>Add to Home Screen</em>.</li>
+            </ul>
+            <div style="display:flex; gap:8px; justify-content:flex-end;">
+              <button id="closeInstallInstr" style="background:#e2e8f0; border:none; padding:8px 12px; border-radius:8px;">Close</button>
+            </div>
+          </div>
+        </div>
+
+        <script>
+            // Register service worker
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(() => console.log('Service Worker registered'))
+                    .catch((err) => console.log('Service Worker failed', err));
+            }
+
+            // beforeinstallprompt handling for custom install button
+            let deferredPrompt;
+            const installBtn = document.getElementById('installBtn');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const instModal = document.getElementById('installInstr');
+
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                installBtn.style.display = 'block';
+            });
+
+            installBtn.addEventListener('click', async () => {
+                installBtn.style.display = 'none';
+                if (!deferredPrompt) return;
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                console.log('User response:', outcome);
+                deferredPrompt = null;
+            });
+
+            downloadBtn.addEventListener('click', async () => {
+                // If install prompt is available, show it
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    console.log('Install prompt response:', outcome);
+                    deferredPrompt = null;
+                    return;
+                }
+                // Otherwise show friendly instructions modal
+                instModal.style.display = 'flex';
+            });
+
+            document.getElementById('closeInstallInstr').addEventListener('click', () => {
+                instModal.style.display = 'none';
+            });
+        </script>
 </body>
 </html>
