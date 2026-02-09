@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Generate PWA Icons</title>
+  <style>body{font-family:Arial,Helvetica,sans-serif;padding:20px;background:#f3f4f6}button{padding:10px 14px;border-radius:8px;border:none;background:#0f172a;color:#fff;cursor:pointer}</style>
+</head>
+<body>
+  <h2>Generate PNG icons from logo1.png</h2>
+  <p>This page will load <strong>/logo1.png</strong> and create two downloadable PNGs: 192×192 and 512×512. After download, move them into the <code>icons/</code> folder in your project root.</p>
+  <button id="go">Generate & Download Icons</button>
+  <pre id="log"></pre>
+
+  <script>
+    const log = (m) => { document.getElementById('log').innerText += m + '\n'; };
+    document.getElementById('go').addEventListener('click', async () => {
+      try {
+        const resp = await fetch('/logo1.png');
+        if (!resp.ok) throw new Error('Could not fetch /logo1.png (open this file via a local server)');
+        const blob = await resp.blob();
+        const img = await createImageBitmap(blob);
+
+        const sizes = [192, 512];
+        for (const s of sizes) {
+          const canvas = new OffscreenCanvas(s, s);
+          const ctx = canvas.getContext('2d');
+          // Fill background white for PNG
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0,0,s,s);
+
+          // calculate cover-fit (cover)
+          const ratio = Math.max(s / img.width, s / img.height);
+          const w = img.width * ratio;
+          const h = img.height * ratio;
+          const x = (s - w) / 2;
+          const y = (s - h) / 2;
+          ctx.drawImage(img, x, y, w, h);
+
+          const blobOut = await canvas.convertToBlob({ type: 'image/png', quality: 1.0 });
+          const url = URL.createObjectURL(blobOut);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `icon-${s}.png`;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          URL.revokeObjectURL(url);
+          log(`Downloaded icon-${s}.png`);
+        }
+
+        log('Done — move the downloaded files into the icons/ folder.');
+      } catch (err) {
+        // fallback for browsers without OffscreenCanvas
+        try {
+          const resp = await fetch('/logo1.png');
+          if (!resp.ok) throw err;
+          const blob = await resp.blob();
+          const imgEl = document.createElement('img');
+          imgEl.src = URL.createObjectURL(blob);
+          await new Promise(r => imgEl.onload = r);
+
+          const sizes = [192,512];
+          for (const s of sizes) {
+            const canvas = document.createElement('canvas');
+            canvas.width = s; canvas.height = s;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#ffffff'; ctx.fillRect(0,0,s,s);
+            const ratio = Math.max(s / imgEl.naturalWidth, s / imgEl.naturalHeight);
+            const w = imgEl.naturalWidth * ratio;
+            const h = imgEl.naturalHeight * ratio;
+            const x = (s - w) / 2;
+            const y = (s - h) / 2;
+            ctx.drawImage(imgEl, x, y, w, h);
+            canvas.toBlob((b) => {
+              const url = URL.createObjectURL(b);
+              const a = document.createElement('a'); a.href = url; a.download = `icon-${s}.png`; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+              log(`Downloaded icon-${s}.png`);
+            }, 'image/png');
+          }
+          log('Done — move the downloaded files into the icons/ folder.');
+        } catch (e) {
+          log('Error: ' + e.message);
+        }
+      }
+    });
+  </script>
+</body>
+</html>
